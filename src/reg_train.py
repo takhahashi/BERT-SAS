@@ -80,11 +80,11 @@ def main(cfg: DictConfig):
 
     with open(cfg.path.traindata_file_name) as f:
         train_dataf = json.load(f)
-    train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score)
+    train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, tokenizer)
 
     with open(cfg.path.valdata_file_name) as f:
         dev_dataf = json.load(f)
-    dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score)
+    dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score, tokenizer)
 
     train_dataloader = torch.utils.data.DataLoader(train_dataset, 
                                                     batch_size=cfg.training.batch_size, 
