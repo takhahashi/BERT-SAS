@@ -91,11 +91,12 @@ def main(cfg: DictConfig):
                                                 drop_last=False, 
                                                 collate_fn=simple_collate_fn)
 
-
+    num_labels = upper_score + 1
     model = create_module(
         cfg.model.model_name_or_path,
         cfg.model.reg_or_class,
         cfg.training.learning_rate,
+        num_labels=num_labels,
         )
     optimizer = optim.AdamW(model.parameters(), lr=cfg.training.learning_rate)
 
@@ -105,7 +106,6 @@ def main(cfg: DictConfig):
     earlystopping = EarlyStopping(patience=cfg.training.patience, verbose=True, path=cfg.path.save_path)
 
     scaler = torch.cuda.amp.GradScaler()
-    sigma_scaler = Scaler(init_S=1.0).cuda()
 
     num_train_batch = len(train_dataloader)
     num_dev_batch = len(dev_dataloader)
@@ -121,25 +121,6 @@ def main(cfg: DictConfig):
             model.zero_grad()
 
             train_loss_all = training_step_outputs['loss'].to('cpu').detach().numpy().copy()
-
-
-        ###calibrate_step###
-        model.eval()
-        with torch.no_grad():
-            dev_results = return_predresults(model, dev_dataloader, rt_clsvec=False, dropout=False)
-        dev_mu = torch.tensor(dev_results['score']).cuda()
-        dev_std = torch.tensor(dev_results['logvar']).exp().sqrt().cuda()
-        dev_labels = torch.tensor(dev_results['labels']).cuda()
-
-        # find optimal S
-        s_opt = torch.optim.LBFGS([sigma_scaler.S], lr=3e-2, max_iter=2000)
-
-        def closure():
-            s_opt.zero_grad()
-            loss = regvarloss(y_true=dev_labels, y_pre_ave=dev_mu, y_pre_var=sigma_scaler(dev_std).pow(2).log())
-            loss.backward()
-            return loss
-        s_opt.step(closure)
 
         for idx, d_batch in enumerate(dev_dataloader):
             batch = {k: v.cuda() for k, v in d_batch.items()}
