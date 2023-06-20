@@ -37,7 +37,7 @@ def return_predresults(model, test_dataloader, rt_clsvec, dropout = False):
             if rt_clsvec == True:
                 y_true.update(cls_outputs)
             eval_results = {k1: np.concatenate([v1, v2]) for (k1, v1), (k2, v2) in zip(eval_results.items(), y_true.items())}
-
+        
     try:
         eval_results['score'] = eval_results['score'].flatten()
         eval_results['logvar'] = eval_results['logvar'].flatten()
