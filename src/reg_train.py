@@ -1,5 +1,4 @@
 import os
-import wandb
 import hydra
 import numpy as np
 import pandas as pd
@@ -68,10 +67,6 @@ class EarlyStopping:
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="train_reg_config")
 def main(cfg: DictConfig):
     cwd = hydra.utils.get_original_cwd()
-    wandb.init(name=cfg.wandb.project_name,
-            project=cfg.wandb.project,
-            reinit=True,
-            )
 
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
@@ -79,11 +74,11 @@ def main(cfg: DictConfig):
 
     with open(cfg.path.traindata_file_name) as f:
         train_dataf = json.load(f)
-    train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, tokenizer)
+    train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
 
     with open(cfg.path.valdata_file_name) as f:
         dev_dataf = json.load(f)
-    dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score, tokenizer)
+    dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
 
     train_dataloader = torch.utils.data.DataLoader(train_dataset, 
                                                     batch_size=cfg.training.batch_size, 
@@ -96,7 +91,7 @@ def main(cfg: DictConfig):
                                                 drop_last=False, 
                                                 collate_fn=simple_collate_fn)
 
-      
+
     model = create_module(
         cfg.model.model_name_or_path,
         cfg.model.reg_or_class,
@@ -126,10 +121,7 @@ def main(cfg: DictConfig):
             model.zero_grad()
 
             train_loss_all = training_step_outputs['loss'].to('cpu').detach().numpy().copy()
-            if idx == 0:
-                wandb.log({"epoch":epoch})
-            else:
-                wandb.log({"epoch":epoch+0.001})
+
 
         ###calibrate_step###
         model.eval()
@@ -161,7 +153,6 @@ def main(cfg: DictConfig):
         earlystopping(dev_loss_all, model)
         if earlystopping.early_stop == True:
             break
-    wandb.finish()
 
 
 if __name__ == "__main__":
