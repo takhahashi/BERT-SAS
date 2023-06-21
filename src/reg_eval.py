@@ -42,17 +42,17 @@ def main(cfg: DictConfig):
 
 
     train_dataloader = torch.utils.data.DataLoader(train_dataset, 
-                                                    batch_size=cfg.training.batch_size, 
+                                                    batch_size=cfg.eval.batch_size, 
                                                     shuffle=False, 
                                                     drop_last=False, 
                                                     collate_fn=simple_collate_fn)
     dev_dataloader = torch.utils.data.DataLoader(dev_dataset, 
-                                                batch_size=cfg.training.batch_size, 
+                                                batch_size=cfg.eval.batch_size, 
                                                 shuffle=False, 
                                                 drop_last=False, 
                                                 collate_fn=simple_collate_fn)
     test_dataloader = torch.utils.data.DataLoader(test_dataset, 
-                                                batch_size=cfg.training.batch_size, 
+                                                batch_size=cfg.eval.batch_size, 
                                                 shuffle=False, 
                                                 drop_last=False, 
                                                 collate_fn=simple_collate_fn)
