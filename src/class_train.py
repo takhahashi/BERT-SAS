@@ -90,7 +90,6 @@ def main(cfg: DictConfig):
                                                 shuffle=False, 
                                                 drop_last=False, 
                                                 collate_fn=simple_collate_fn)
-
     num_labels = upper_score + 1
     model = create_module(
         cfg.model.model_name_or_path,
@@ -120,21 +119,17 @@ def main(cfg: DictConfig):
             scaler.update()
             model.zero_grad()
 
-            train_loss_all = training_step_outputs['loss'].to('cpu').detach().numpy().copy()
+            train_loss_all += training_step_outputs['loss'].to('cpu').detach().numpy().copy()
 
         for idx, d_batch in enumerate(dev_dataloader):
             batch = {k: v.cuda() for k, v in d_batch.items()}
             dev_step_outputs = model.validation_step(batch, idx)
-            dev_mu = dev_step_outputs['score']
-            dev_std = dev_step_outputs['logvar'].exp().sqrt()
-            dev_labels = dev_step_outputs['labels']
-            dev_loss_all += regvarloss(y_true=dev_labels, y_pre_ave=dev_mu, y_pre_var=sigma_scaler(dev_std.cuda()).pow(2).log()).to('cpu').detach().numpy().copy()
+            dev_loss_all += dev_step_outputs['loss'].to('cpu').detach().numpy().copy()
 
         print(f'Epoch:{epoch}, train_loss:{train_loss_all/num_train_batch}, dev_loss:{dev_loss_all/num_dev_batch}')
         earlystopping(dev_loss_all, model)
         if earlystopping.early_stop == True:
             break
-
 
 if __name__ == "__main__":
     main()
