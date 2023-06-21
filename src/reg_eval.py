@@ -9,58 +9,54 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from omegaconf import DictConfig
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 from transformers import AutoTokenizer
-from utils.utils_data import TrainDataModule
 from utils.cfunctions import simple_collate_fn
 from utils.utils_models import create_module
-from utils.dataset import get_Dataset
 from models.functions import return_predresults
 from ue4nlp.ue_estimater_ensemble import UeEstimatorEnsemble
 from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
 from ue4nlp.ue_estimater_mcd import UeEstimatorDp
 from ue4nlp.ue_estimater_calibvar import UeEstimatorCalibvar
 
+from utils.dataset import get_upper_score, get_dataset
+import json
+
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/1.AES/ASAP/BERT-AES/configs", config_name="eval_config")
 def main(cfg: DictConfig):
-    train_dataset = get_Dataset(cfg.model.reg_or_class, 
-                               cfg.path.traindata_file_name, 
-                               cfg.aes.prompt_id, 
-                               AutoTokenizer.from_pretrained(cfg.model.model_name_or_path),
-                               )
-    dev_dataset = get_Dataset(cfg.model.reg_or_class,
-                              cfg.path.devdata_file_name,
-                              cfg.aes.prompt_id,
-                              AutoTokenizer.from_pretrained(cfg.model.model_name_or_path),
-                              )
-    test_dataset = get_Dataset(cfg.model.reg_or_class, 
-                               cfg.path.testdata_file_name, 
-                               cfg.aes.prompt_id, 
-                               AutoTokenizer.from_pretrained(cfg.model.model_name_or_path),
-                               )
-    
-    if cfg.eval.collate_fn == True:
-        collate_fn = simple_collate_fn
-    else:
-        collate_fn = None
 
-    train_dataloader = torch.utils.data.DataLoader(train_dataset,
-                                                  batch_size=cfg.eval.batch_size,
-                                                  shuffle=False,
-                                                  collate_fn=collate_fn,
-                                                  )
-    dev_dataloader = torch.utils.data.DataLoader(dev_dataset,
-                                                batch_size=cfg.eval.batch_size,
-                                                shuffle=False,
-                                                collate_fn=collate_fn,
-                                                )
-    test_dataloader = torch.utils.data.DataLoader(test_dataset,
-                                                  batch_size=cfg.eval.batch_size,
-                                                  shuffle=False,
-                                                  collate_fn=collate_fn,
-                                                  )
+    tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
+    upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
+
+
+    with open(cfg.path.traindata_file_name) as f:
+        train_dataf = json.load(f)
+    train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
+    with open(cfg.path.valdata_file_name) as f:
+        dev_dataf = json.load(f)
+    dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
+    with open(cfg.path.testdata_file_name) as f:
+        test_dataf = json.load(f)
+    test_dataset = get_dataset(test_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
+
+
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, 
+                                                    batch_size=cfg.training.batch_size, 
+                                                    shuffle=False, 
+                                                    drop_last=False, 
+                                                    collate_fn=simple_collate_fn)
+    dev_dataloader = torch.utils.data.DataLoader(dev_dataset, 
+                                                batch_size=cfg.training.batch_size, 
+                                                shuffle=False, 
+                                                drop_last=False, 
+                                                collate_fn=simple_collate_fn)
+    test_dataloader = torch.utils.data.DataLoader(test_dataset, 
+                                                batch_size=cfg.training.batch_size, 
+                                                shuffle=False, 
+                                                drop_last=False, 
+                                                collate_fn=simple_collate_fn)
+
     
     model = create_module(cfg.model.model_name_or_path, 
                           cfg.model.reg_or_class, 
@@ -85,7 +81,7 @@ def main(cfg: DictConfig):
 
     trust_estimater = UeEstimatorTrustscore(model, 
                                             train_dataloader, 
-                                            cfg.aes.prompt_id,
+                                            upper_score,
                                             )
     trust_estimater.fit_ue()
     trust_results = trust_estimater(test_dataloader)
@@ -93,9 +89,8 @@ def main(cfg: DictConfig):
 
 
 
-    mcdp_estimater = UeEstimatorDp(model, 
-                                   cfg.ue.num_dropout, 
-                                   cfg.aes.prompt_id, 
+    mcdp_estimater = UeEstimatorDp(model,
+                                   cfg.ue.num_dropout,
                                    cfg.model.reg_or_class,
                                    )
     mcdp_results = mcdp_estimater(test_dataloader)
@@ -114,7 +109,6 @@ def main(cfg: DictConfig):
 
 
     ensemble_estimater = UeEstimatorEnsemble(cfg.ue.ensemble_model_paths,
-                                             cfg.aes.prompt_id,
                                              cfg.model.reg_or_class,
                                              )
     ensemble_results = ensemble_estimater(test_dataloader)

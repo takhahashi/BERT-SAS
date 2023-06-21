@@ -7,9 +7,8 @@ import torch
     
 
 class UeEstimatorEnsemble:
-    def __init__(self, model_paths, prompt_id, reg_or_class):
+    def __init__(self, model_paths, reg_or_class):
         self.model_paths = model_paths
-        self.prompt_id = prompt_id
         self.reg_or_class = reg_or_class
         
     def __call__(self, dataloader):

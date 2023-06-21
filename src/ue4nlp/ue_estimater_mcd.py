@@ -5,10 +5,9 @@ from ue4nlp.ue_estimater_calibvar import UeEstimatorCalibvar
 import torch
 
 class UeEstimatorDp:
-    def __init__(self, model, dropout_num, prompt_id, reg_or_class):
+    def __init__(self, model, dropout_num, reg_or_class):
         self.model = model
         self.dropout_num = dropout_num
-        self.prompt_id = prompt_id
         self.reg_or_class = reg_or_class
         
     def __call__(self, dataloader):
