@@ -44,7 +44,8 @@ class EarlyStopping:
         if self.best_score is None:  #1Epoch目の処理
             self.best_score = score   #1Epoch目はそのままベストスコアとして記録する
             self.val_loss_min = -score
-            print(f'first_score: {-self.best_score}')
+            print(f'first_score: {-self.best_score}.     Saving model ...')
+            torch.save(model.state_dict(), self.path)
             #self.checkpoint(val_loss, model)  #記録後にモデルを保存してスコア表示する
         elif score <= self.best_score:  # ベストスコアを更新できなかった場合
             self.counter += 1   #ストップカウンタを+1
