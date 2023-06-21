@@ -64,7 +64,7 @@ class EarlyStopping:
         torch.save(model.state_dict(), self.path)  #ベストモデルを指定したpathに保存
         self.val_loss_min = val_loss  #その時のlossを記録する
 
-@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="train_reg_config")
+@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="train_class_config")
 def main(cfg: DictConfig):
     cwd = hydra.utils.get_original_cwd()
 
