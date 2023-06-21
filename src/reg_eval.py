@@ -23,7 +23,7 @@ from utils.dataset import get_upper_score, get_dataset
 import json
 
 
-@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/1.AES/ASAP/BERT-AES/configs", config_name="eval_config")
+@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_config")
 def main(cfg: DictConfig):
 
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
