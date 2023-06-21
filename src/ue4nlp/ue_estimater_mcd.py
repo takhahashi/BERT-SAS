@@ -36,5 +36,5 @@ class UeEstimatorDp:
         else:
             mulscore, muluncertainty = compute_mulprob_muluncertain(mul_results['logits'], self.dropout_num)
             mcdp_result['mcdp_score'] = mulscore
-            mcdp_result['mcdp_var'] = muluncertainty
+            mcdp_result['mcdp_uncertainty'] = muluncertainty
         return mcdp_result

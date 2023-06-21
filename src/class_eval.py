@@ -33,9 +33,7 @@ def main(cfg: DictConfig):
     with open(cfg.path.traindata_file_name) as f:
         train_dataf = json.load(f)
     train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
-    with open(cfg.path.valdata_file_name) as f:
-        dev_dataf = json.load(f)
-    dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
+    
     with open(cfg.path.testdata_file_name) as f:
         test_dataf = json.load(f)
     test_dataset = get_dataset(test_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
@@ -46,11 +44,6 @@ def main(cfg: DictConfig):
                                                     shuffle=False, 
                                                     drop_last=False, 
                                                     collate_fn=simple_collate_fn)
-    dev_dataloader = torch.utils.data.DataLoader(dev_dataset, 
-                                                batch_size=cfg.eval.batch_size, 
-                                                shuffle=False, 
-                                                drop_last=False, 
-                                                collate_fn=simple_collate_fn)
     test_dataloader = torch.utils.data.DataLoader(test_dataset, 
                                                 batch_size=cfg.eval.batch_size, 
                                                 shuffle=False, 
@@ -65,7 +58,6 @@ def main(cfg: DictConfig):
                           )
     model.load_state_dict(torch.load(cfg.path.model_save_path))
 
-    dev_results = return_predresults(model, dev_dataloader, rt_clsvec=False, dropout=False)
     eval_results = return_predresults(model, test_dataloader, rt_clsvec=False, dropout=False)
 
     softmax = nn.Softmax(dim=1)
@@ -82,42 +74,20 @@ def main(cfg: DictConfig):
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
 
-
-
     mcdp_estimater = UeEstimatorDp(model,
                                    cfg.ue.num_dropout,
                                    cfg.model.reg_or_class,
                                    )
     mcdp_results = mcdp_estimater(test_dataloader)
     eval_results.update(mcdp_results)
-    ######calib mcdp var ########
-    dev_mcdp_results = mcdp_estimater(dev_dataloader)
-    calib_mcdp_var_estimater = UeEstimatorCalibvar(dev_labels=torch.tensor(dev_results['labels']),
-                                                   dev_score=torch.tensor(dev_mcdp_results['mcdp_score']),
-                                                   dev_logvar=torch.tensor(dev_mcdp_results['mcdp_var']).log(),
-                                                   )
-    calib_mcdp_var_estimater.fit_ue()
-    calib_mcdp_var = calib_mcdp_var_estimater(logvar = torch.tensor(mcdp_results['mcdp_var']).log())
-    eval_results.update({'calib_mcdp_var': calib_mcdp_var})
 
 
-
-
-    ensemble_estimater = UeEstimatorEnsemble(cfg.ue.ensemble_model_paths,
+    ensemble_estimater = UeEstimatorEnsemble(model, 
+                                             cfg.ue.ensemble_model_paths,
                                              cfg.model.reg_or_class,
                                              )
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
-    #####calib ense var ##########
-    dev_ense_results = ensemble_estimater(dev_dataloader)
-    calib_ense_var_estimater = UeEstimatorCalibvar(dev_labels=torch.tensor(dev_results['labels']),
-                                                    dev_score=torch.tensor(dev_ense_results['ense_score']),
-                                                    dev_logvar=torch.tensor(dev_ense_results['ense_var']).log(),
-                                                    )
-    calib_ense_var_estimater.fit_ue()
-    calib_ense_var = calib_ense_var_estimater(logvar = torch.tensor(ensemble_results['ense_var']).log())
-    eval_results.update({'calib_ense_var': calib_ense_var})
-
 
     list_results = {k: v.tolist() for k, v in eval_results.items() if type(v) == type(np.array([1, 2, 3.]))}
     

@@ -7,7 +7,8 @@ import torch
     
 
 class UeEstimatorEnsemble:
-    def __init__(self, model_paths, reg_or_class):
+    def __init__(self, model, model_paths, reg_or_class):
+        self.model = model
         self.model_paths = model_paths
         self.reg_or_class = reg_or_class
         
@@ -17,12 +18,8 @@ class UeEstimatorEnsemble:
     
     def _multi_pred(self, dataloader):
         mul_results = {}
+        model = self.model
         for model_path in self.model_paths:
-            model = create_module(
-                'bert-base-uncased',
-                self.reg_or_class,
-                0.00005,
-                )
             model.load_state_dict(torch.load(model_path))
             pred_result = return_predresults(model, dataloader, rt_clsvec=False, dropout=False)
             del pred_result['labels']
@@ -45,5 +42,5 @@ class UeEstimatorEnsemble:
         else:
             mulscore, muluncertainty = compute_mulprob_muluncertain(mul_pred_results['logits'], mul_num)
             ense_result['ense_score'] = mulscore
-            ense_result['ense_var'] = muluncertainty
+            ense_result['ense_uncertainty'] = muluncertainty
         return ense_result
