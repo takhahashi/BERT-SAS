@@ -5,7 +5,6 @@ from ue4nlp.ue_estimater_calibvar import UeEstimatorCalibvar
 
 import torch
     
-
 class UeEstimatorEnsemble:
     def __init__(self, model, model_paths, reg_or_class):
         self.model = model
