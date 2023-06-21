@@ -68,16 +68,11 @@ def main(cfg: DictConfig):
     dev_results = return_predresults(model, dev_dataloader, rt_clsvec=False, dropout=False)
     eval_results = return_predresults(model, test_dataloader, rt_clsvec=False, dropout=False)
 
+    softmax = nn.Softmax(dim=1)
+    probs = softmax(torch.tensor(eval_results['logits']))
+    max_prob = torch.argmax(probs, dim=-1).numpy()
+    eval_results.update({'MP': max_prob})
 
-    #####calib step#####
-    calib_var_estimater = UeEstimatorCalibvar(dev_labels=torch.tensor(dev_results['labels']),
-                                              dev_score=torch.tensor(dev_results['score']),
-                                              dev_logvar=torch.tensor(dev_results['logvar']),
-                                              )
-    calib_var_estimater.fit_ue()
-    caliblated_var = calib_var_estimater(logvar = torch.tensor(eval_results['logvar']))
-    eval_results.update({'calib_var': caliblated_var})
-    ####end calib step##
 
     trust_estimater = UeEstimatorTrustscore(model, 
                                             train_dataloader, 

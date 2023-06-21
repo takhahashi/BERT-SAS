@@ -4,10 +4,11 @@ from utils.cfunctions import score_f2int
 import numpy as np
 
 class UeEstimatorTrustscore:
-    def __init__(self, model, train_dataloader, upper_score):
+    def __init__(self, model, train_dataloader, upper_score, reg_or_class):
         self.model = model
         self.train_dataloader = train_dataloader
         self.upper_score = upper_score
+        self.reg_or_class = reg_or_class
         
 
     def __call__(self, dataloader=None, X_features=None, scores=None):
@@ -17,14 +18,21 @@ class UeEstimatorTrustscore:
             return self._predict_with_fitted_clsvec(X_features, int_scores)
         else:
             X_features, scores = self._extract_features_and_predlabels(dataloader)
-            int_scores = np.round(scores * self.upper_score).astype('int32')
+            if self.reg_or_class == 'reg':
+                int_scores = np.round(scores * self.upper_score).astype('int32')
+            else:
+                int_scores = scores.astype('int32')
             return self._predict_with_fitted_clsvec(X_features, int_scores)
         
     
     def fit_ue(self):
-        X_features, y = self._extract_features_and_truelabels(self.train_dataloader)
-        int_labels = np.round(y * self.upper_score).astype('int32')
-        self.class_features = self._fit_classfeatures(X_features, int_labels)
+        if self.reg_or_class == 'reg':
+            X_features, y = self._extract_features_and_truelabels(self.train_dataloader)
+            int_labels = np.round(y * self.upper_score).astype('int32')
+            self.class_features = self._fit_classfeatures(X_features, int_labels)
+        else:
+            X_features, y = self._extract_features_and_truelabels(self.train_dataloader)
+            self.class_features = self._fit_classfeatures(X_features, y.astype('int32'))
 
         
     def _fit_classfeatures(self, X_features, scores):
