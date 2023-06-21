@@ -13,17 +13,17 @@ class UeEstimatorTrustscore:
     def __call__(self, dataloader=None, X_features=None, scores=None):
         if X_features is not None and scores is not None:
             if scores.dtype != np.int32:
-                int_scores = np.round(scores * self.upper_score)
+                int_scores = np.round(scores * self.upper_score).astype('int32')
             return self._predict_with_fitted_clsvec(X_features, int_scores)
         else:
             X_features, scores = self._extract_features_and_predlabels(dataloader)
-            int_scores = np.round(scores * self.upper_score)
+            int_scores = np.round(scores * self.upper_score).astype('int32')
             return self._predict_with_fitted_clsvec(X_features, int_scores)
         
     
     def fit_ue(self):
         X_features, y = self._extract_features_and_truelabels(self.train_dataloader)
-        int_labels = np.round(y * self.upper_score)
+        int_labels = np.round(y * self.upper_score).astype('int32')
         self.class_features = self._fit_classfeatures(X_features, int_labels)
 
         
