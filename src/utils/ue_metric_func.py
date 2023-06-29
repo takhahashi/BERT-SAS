@@ -30,24 +30,24 @@ def calc_rpp(conf, risk):
         cnt += 1
   return cnt / (n**2)
 
-def calc_roc_auc(pred, true, conf, prompt_id):
-  if pred.dtype != np.int32:
-    int_scores = score_f2int(pred, prompt_id)
-  if true.dype != np.int32:
-    int_true = score_f2int(true, prompt_id)
+def calc_roc_auc(pred, true, conf, reg_or_class, upper_score=None):
+  if reg_or_class == 'reg':
+    int_scores = np.round(pred * upper_score).astype('int32')
+    int_true = np.round(true * upper_score).astype('int32')
+  else:
+    int_scores = pred.astype('int32')
+    int_true = true.astype('int32')
   return roc_auc_score(int_scores == int_true, conf)
 
-def calc_risk(pred, true, prompt_id, binary=False):
+def calc_risk(pred, true, reg_or_class, upper_score=None, binary=False):
   if binary == True:
-    if pred.dtype != np.int32:
-      int_scores = score_f2int(pred, prompt_id)
+    if reg_or_class =='reg':
+      int_scores = np.round(pred * upper_score).astype('int32')
+      int_true = np.round(true * upper_score).astype('int32')
     else:
-      int_scores = pred
-    if true.dype != np.int32:
-      int_true = score_f2int(true, prompt_id)
-    else:
-      int_true = true
-    return int_scores != int_true
+      int_scores = pred.astype('int32')
+      int_true = true.astype('int32')
+    return (int_scores != int_true).astype('int32')
   else:
     return (pred - true) ** 2
     
