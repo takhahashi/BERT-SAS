@@ -62,8 +62,8 @@ def main(cfg: DictConfig):
 
     softmax = nn.Softmax(dim=1)
     probs = softmax(torch.tensor(eval_results['logits']))
-    max_prob = torch.argmax(probs, dim=-1).numpy()
-    eval_results.update({'MP': max_prob})
+    max_prob = probs[torch.arange(len(probs)), torch.argmax(probs, dim=-1)]
+    eval_results.update({'MP': max_prob.numpy().copy()})
 
 
     trust_estimater = UeEstimatorTrustscore(model, 
@@ -89,8 +89,13 @@ def main(cfg: DictConfig):
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
 
-    list_results = {k: v.tolist() for k, v in eval_results.items() if type(v) == type(np.array([1, 2, 3.]))}
-    
+    list_results = {}
+    for k, v in eval_results.items():
+        if type(v) == type(np.array([1, 2.])):
+            list_results.update({k: v.tolist()})
+        else:
+            list_results.update({k: v})
+
     with open(cfg.path.results_save_path, mode="wt", encoding="utf-8") as f:
         json.dump(list_results, f, ensure_ascii=False)
     
