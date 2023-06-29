@@ -82,6 +82,7 @@ def main(cfg: DictConfig):
     trust_estimater = UeEstimatorTrustscore(model, 
                                             train_dataloader, 
                                             upper_score,
+                                            cfg.model.reg_or_class
                                             )
     trust_estimater.fit_ue()
     trust_results = trust_estimater(test_dataloader)
@@ -108,9 +109,10 @@ def main(cfg: DictConfig):
 
 
 
-    ensemble_estimater = UeEstimatorEnsemble(cfg.ue.ensemble_model_paths,
-                                             cfg.model.reg_or_class,
-                                             )
+    ensemble_estimater = UeEstimatorEnsemble(model,
+                                            cfg.ue.ensemble_model_paths,
+                                            cfg.model.reg_or_class,
+                                            )
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
     #####calib ense var ##########
@@ -124,8 +126,13 @@ def main(cfg: DictConfig):
     eval_results.update({'calib_ense_var': calib_ense_var})
 
 
-    list_results = {k: v.tolist() for k, v in eval_results.items() if type(v) == type(np.array([1, 2, 3.]))}
-    
+    list_results = {}
+    for k, v in eval_results.items():
+        if type(v) == type(np.array([1, 2.])):
+            list_results.update({k: v.tolist()})
+        else:
+            list_results.update({k: v})
+
     with open(cfg.path.results_save_path, mode="wt", encoding="utf-8") as f:
         json.dump(list_results, f, ensure_ascii=False)
     
