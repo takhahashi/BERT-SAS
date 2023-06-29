@@ -15,7 +15,7 @@ from transformers import AutoTokenizer
 from utils.utils_data import TrainDataModule
 from utils.cfunctions import simple_collate_fn
 from utils.utils_models import create_module
-from utils.dataset import get_Dataset, get_upper_score
+from utils.dataset import get_upper_score
 from utils.ue_metric_func import calc_rcc_auc, calc_rpp, calc_roc_auc, calc_risk
 from models.functions import return_predresults
 from ue4nlp.ue_estimater_ensemble import UeEstimatorEnsemble
@@ -27,7 +27,7 @@ from ue4nlp.ue_estimater_mcd import UeEstimatorDp
 def main(cfg: DictConfig):
     five_fold_results = []
     for fold in range(5):
-        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/1_5_results/Reg_{}/fold{}'.format(cfg.sas.score_id, fold)) as f:
+        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Reg_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
             fold_results = json.load(f)
         five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
@@ -129,7 +129,7 @@ def main(cfg: DictConfig):
     ##class###
     five_fold_results = []
     for fold in range(5):
-        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/1_5_results/Class_{}/fold{}'.format(cfg.sas.score_id, fold)) as f:
+        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Class_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
             fold_results = json.load(f)
         five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
