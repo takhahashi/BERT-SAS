@@ -69,6 +69,7 @@ def main(cfg: DictConfig):
     trust_estimater = UeEstimatorTrustscore(model, 
                                             train_dataloader, 
                                             upper_score,
+                                            cfg.model.reg_or_class,
                                             )
     trust_estimater.fit_ue()
     trust_results = trust_estimater(test_dataloader)
