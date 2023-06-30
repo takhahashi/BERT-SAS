@@ -69,30 +69,30 @@ def main():
 
 
     ##rcc_y_fig###
-    for prompt_id in range(1, 9):
-        plt.figure()
-        for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
-            with open('/content/drive/MyDrive/GoogleColab/1.AES/ASAP/torchlightning/pt{}/{}'.format(prompt_id, utype)) as f:
-                fold_results = json.load(f)
-            results = {k: np.array(v) for k, v in fold_results.items()}
-            min_len = 1000000
-            for rcc_y in results['rcc_y']:
-                if len(rcc_y) < min_len:
-                    min_len = len(rcc_y)
-            rcc_y_list = []
-            for rcc_y in results['rcc_y']:
-                rcc_y_list.append(np.array(rcc_y)[:min_len])
-            mean_rcc_y = np.mean(rcc_y_list, axis=0)
-            
-            fraction = 1 / len(mean_rcc_y)
-            rcc_x = [fraction]
-            for i in range(len(mean_rcc_y)-1):
-                rcc_x = np.append(rcc_x, fraction+rcc_x[-1])
-            down_data = down_sample([rcc_x, mean_rcc_y], samples=50)
-            plt.plot(down_data[0], down_data[1], label=utype)
-        plt.legend()
-        plt.savefig('/content/drive/MyDrive/GoogleColab/1.AES/ASAP/torchlightning/pt{}.png'.format(prompt_id)) 
-        plt.show()
+    plt.figure()
+    for qtype in ['1_5']:
+        for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
+            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+                with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
+                    fold_results = json.load(f)
+                results = {k: np.array(v) for k, v in fold_results.items()}
+                min_len = 1000000
+                for rcc_y in results['rcc_y']:
+                    if len(rcc_y) < min_len:
+                        min_len = len(rcc_y)
+                rcc_y_list = []
+                for rcc_y in results['rcc_y']:
+                    rcc_y_list.append(np.array(rcc_y)[:min_len])
+                mean_rcc_y = np.mean(rcc_y_list, axis=0)
+                fraction = 1 / len(mean_rcc_y)
+                rcc_x = [fraction]
+                for i in range(len(mean_rcc_y)-1):
+                    rcc_x = np.append(rcc_x, fraction+rcc_x[-1])
+                down_data = down_sample([rcc_x, mean_rcc_y], samples=50)
+                plt.plot(down_data[0], down_data[1], label=utype)
+            plt.legend()
+            plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}_RCC.png'.format(qtype, stype)) 
+            plt.show()
 
 
 if __name__ == "__main__":
