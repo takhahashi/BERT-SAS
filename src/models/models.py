@@ -126,3 +126,28 @@ class Scaler(torch.nn.Module):
 
     def forward(self, x):
         return self.S.mul(x)
+    
+class Reg_class_mixmodel(nn.Module):
+    def __init__(self, bert, num_classes):
+        super(Reg_class_mixmodel, self).__init__()
+        self.bert = bert
+        self.linear1 = nn.Linear(768, 1)
+        self.linear2 = nn.Linear(768, num_classes)
+
+        self.sigmoid = nn.Sigmoid()
+
+        nn.init.normal_(self.linear1.weight, std=0.02)  # 重みの初期化
+        nn.init.normal_(self.linear1.bias, 0)  # バイアスの初期化
+        nn.init.normal_(self.linear2.weight, std=0.02)
+        nn.init.normal_(self.linear2.bias, 0)  # バイアスの初期化
+
+    def forward(self, dataset):
+        hidden_state = self.bert(dataset)['hidden_state']
+        score = self.sigmoid(self.linear1(hidden_state))
+        logits = self.linear2(hidden_state)
+        return {'score': score, 'logits': logits}
+
+    def get_word_vec(self, dataset):        
+        outputs = self.bert(dataset['input_ids'], token_type_ids=dataset['token_type_ids'], attention_mask=dataset['attention_mask'])
+        sequence_output = outputs['last_hidden_state'][:, 0, :] 
+        return {'word_vec': sequence_output}
