@@ -1,0 +1,20 @@
+eval:
+  fold: 0
+  batch_size: 8
+  collate_fn: True
+model:
+  model_name_or_path: 'bert-base-uncased'
+  reg_or_class: 'reg'
+  max_length: 512
+  num_labels: None
+  id: 0
+sas:
+  question_id: '1_5'
+  score_id: A_Score
+  friendly_score: True
+path:
+  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/train_data.json
+  valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/dev_data.json
+  testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/test_data.json
+  model_save_path:  /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/id${model.id}
+  results_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_results/Mix_${sas.score_id}/fold${eval.fold}
