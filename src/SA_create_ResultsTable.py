@@ -96,12 +96,12 @@ def main():
 
 
     qwk_dic = {}
-    table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class']
+    table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class', 'mix']
     for utype in table_idx_name:
         qwk_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for idx, utype in enumerate(['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc']):
+            for idx, utype in enumerate(['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc', 'mix_acc']):
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -113,12 +113,12 @@ def main():
     qwk_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/qwk_table.tsv'.format(qtype), sep='\t', index=True)
 
     corr_dic = {}
-    table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class']
+    table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class', 'mix']
     for utype in table_idx_name:
         corr_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for idx, utype in enumerate(['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc']):
+            for idx, utype in enumerate(['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc', 'mix_acc']):
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -130,12 +130,12 @@ def main():
     corr_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/corr_table.tsv'.format(qtype), sep='\t', index=True)
 
     rmse_dic = {}
-    table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class']
+    table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class', 'mix']
     for utype in table_idx_name:
         rmse_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for idx, utype in enumerate(['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc']):
+            for idx, utype in enumerate(['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc', 'mix_acc']):
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}

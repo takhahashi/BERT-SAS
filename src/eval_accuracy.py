@@ -35,7 +35,7 @@ def main(cfg: DictConfig):
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
     save_dir_path = cfg.path.save_dir_path
 
-    """
+    
     corr_arr, qwk_arr, rmse_arr = [], [], []
     ##simple reg####
     for foldr in five_fold_results:
@@ -152,11 +152,8 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
-    """
 
-
-
-
+    ##Mix####
     five_fold_results = []
     for fold in range(5):
         with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Mix_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
@@ -164,7 +161,7 @@ def main(cfg: DictConfig):
         five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
     corr_arr, qwk_arr, rmse_arr = [], [], []
-    ##Mix####
+    
     for foldr in five_fold_results:
         true = np.round(foldr['labels'] * upper_score).astype('int32')
         pred = np.round(foldr['score'] * upper_score).astype('int32')
