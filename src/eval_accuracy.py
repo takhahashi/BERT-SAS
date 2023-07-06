@@ -28,7 +28,7 @@ from sklearn.metrics import cohen_kappa_score
 def main(cfg: DictConfig):
     five_fold_results = []
     for fold in range(5):
-        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Reg_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
+        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Reg_{}/fold{}_2'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
             fold_results = json.load(f)
         five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
@@ -49,7 +49,7 @@ def main(cfg: DictConfig):
                     'corr': np.mean(corr_arr), 
                     'rmse': np.mean(rmse_arr)}
 
-    save_path = save_dir_path + '/simple_reg_acc'
+    save_path = save_dir_path + '/simple_reg_acc_2'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
     
@@ -68,7 +68,7 @@ def main(cfg: DictConfig):
                     'corr': np.mean(corr_arr), 
                     'rmse': np.mean(rmse_arr)}
 
-    save_path = save_dir_path + '/dp_reg_acc'
+    save_path = save_dir_path + '/dp_reg_acc_2'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
@@ -87,10 +87,11 @@ def main(cfg: DictConfig):
                     'corr': np.mean(corr_arr), 
                     'rmse': np.mean(rmse_arr)}
 
-    save_path = save_dir_path + '/ense_reg_acc'
+    save_path = save_dir_path + '/ense_reg_acc_2'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
+    """
     ##class###
     five_fold_results = []
     for fold in range(5):
@@ -176,6 +177,8 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/mix_acc'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
+
+    """
 
 if __name__ == "__main__":
     main()
