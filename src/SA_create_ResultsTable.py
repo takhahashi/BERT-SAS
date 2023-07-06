@@ -18,11 +18,11 @@ def down_sample(data, samples=300):
 def main():
     ###roc_auc###
     roc_dic = {}
-    for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+    for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
         roc_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -35,11 +35,11 @@ def main():
 
     ##rpp##
     rpp_dic = {}
-    for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+    for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
         rpp_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -52,11 +52,11 @@ def main():
 
     ##rcc###
     rcc_dic = {}
-    for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+    for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
         rcc_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -72,7 +72,7 @@ def main():
     plt.figure()
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score']:
+            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
