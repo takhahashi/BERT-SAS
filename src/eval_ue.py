@@ -34,7 +34,6 @@ def main(cfg: DictConfig):
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
     save_dir_path = cfg.path.save_dir_path
 
-    """
 
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##simple var####
@@ -230,7 +229,6 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
-    """
     
     five_fold_results = []
     for fold in range(5):
