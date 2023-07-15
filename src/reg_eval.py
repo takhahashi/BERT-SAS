@@ -18,6 +18,8 @@ from ue4nlp.ue_estimater_ensemble import UeEstimatorEnsemble
 from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
 from ue4nlp.ue_estimater_mcd import UeEstimatorDp
 from ue4nlp.ue_estimater_calibvar import UeEstimatorCalibvar
+from ue4nlp.ue_estimater_mahalanobis import UeEstimatorMahalanobis
+
 
 from utils.dataset import get_upper_score, get_dataset
 import json
@@ -88,6 +90,14 @@ def main(cfg: DictConfig):
     trust_estimater.fit_ue()
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
+
+    maha_estimater = UeEstimatorMahalanobis(model,
+                                            train_dataloader,
+                                            upper_score,
+                                            cfg.model.reg_or_class)
+    maha_estimater.fit_ue()
+    maha_results = maha_estimater(test_dataloader)
+    eval_results.update(maha_results)
 
 
 

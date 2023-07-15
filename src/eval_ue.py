@@ -180,6 +180,8 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
+    ##class maha
+
 
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##class dp MP####
