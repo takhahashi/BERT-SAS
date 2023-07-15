@@ -1,15 +1,16 @@
 from models.functions import return_predresults
-from ue4nlp.functions import compute_mulscore_mulvar, compute_mulMP, compute_mulEntropy, compute_mulprob_epiuncertain
+from ue4nlp.functions import compute_mulscore_mulvar, compute_mulMP, compute_mulEntropy, compute_mulprob_epiuncertain, compute_MixMulMP
 from utils.utils_models import create_module
 from ue4nlp.ue_estimater_calibvar import UeEstimatorCalibvar
 
 import torch
     
 class UeEstimatorEnsemble:
-    def __init__(self, model, model_paths, reg_or_class):
+    def __init__(self, model, model_paths, reg_or_class, upper_score):
         self.model = model
         self.model_paths = model_paths
         self.reg_or_class = reg_or_class
+        self.upper_score = upper_score
         
     def __call__(self, dataloader):
         ense_results = self._predict_with_multimodel(dataloader)
@@ -38,6 +39,12 @@ class UeEstimatorEnsemble:
             mulscore, mulvar = compute_mulscore_mulvar(mul_pred_results['score'], mul_pred_results['logvar'], mul_num)
             ense_result['ense_score'] = mulscore
             ense_result['ense_var'] = mulvar
+        elif self.reg_or_class == 'mix':
+            mulscore, mulMP = compute_MixMulMP(mul_pred_results['score'], mul_pred_results['logits'], mul_num, self.upper_score)
+            _, mul_entropy = compute_mulEntropy(mul_pred_results['logits'], mul_num)
+            ense_result['ense_score'] = mulscore
+            ense_result['ense_MP'] = mulMP
+            ense_result['ense_entropy'] = mul_entropy
         else:
             mulscore, mulMP = compute_mulMP(mul_pred_results['logits'], mul_num)
             _, mul_entropy = compute_mulEntropy(mul_pred_results['logits'], mul_num)

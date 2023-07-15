@@ -52,7 +52,7 @@ def get_dataset(dataf, s_id, upper_s, inftype, tokenizer):
     text.append(data['mecab'].replace(' ', ''))
     score.append(data[s_id])
   encoding = tokenizer(text, max_length=512, padding='max_length', truncation=True, return_tensors='pt')
-  if inftype == 'reg':
+  if inftype == 'reg' or inftype == 'mix':
     labels = torch.div(torch.tensor(score, dtype=torch.float32), upper_s)
   elif inftype == 'class':
     labels = torch.tensor(score, dtype=torch.long)

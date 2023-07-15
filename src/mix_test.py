@@ -16,7 +16,9 @@ from models.functions import return_predresults
 from utils.cfunctions import regvarloss
 from models.models import Scaler, Bert, Reg_class_mixmodel
 from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
-
+from ue4nlp.ue_estimater_ensemble import UeEstimatorEnsemble
+from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
+from ue4nlp.ue_estimater_mcd import UeEstimatorDp
 from utils.dataset import get_upper_score, get_dataset
 import json
 
@@ -56,6 +58,24 @@ def main(cfg: DictConfig):
     mix_trust = pred_probs[torch.arange(len(pred_probs)), pred_int_score]
     eval_results.update({'mix_conf': mix_trust.numpy().copy()})
 
+    mcdp_estimater = UeEstimatorDp(model,
+                                   cfg.ue.num_dropout,
+                                   cfg.model.reg_or_class,
+                                   upper_score,
+                                   )
+    mcdp_results = mcdp_estimater(test_dataloader)
+    eval_results.update(mcdp_results)
+
+
+    ensemble_estimater = UeEstimatorEnsemble(model, 
+                                             cfg.ue.ensemble_model_paths,
+                                             cfg.model.reg_or_class,
+                                             upper_score,
+                                             )
+    ensemble_results = ensemble_estimater(test_dataloader)
+    eval_results.update(ensemble_results)
+
+    """
     max_prob = pred_probs[torch.arange(len(pred_probs)), torch.argmax(pred_probs, dim=-1)]
     eval_results.update({'MP': max_prob.numpy().copy()})
 
@@ -67,6 +87,7 @@ def main(cfg: DictConfig):
     trust_estimater.fit_ue()
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
+    """
 
 
     list_results = {k: v.tolist() for k, v in eval_results.items() if type(v) == type(np.array([1, 2, 3.]))}
