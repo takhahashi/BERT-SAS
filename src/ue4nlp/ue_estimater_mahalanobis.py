@@ -1,5 +1,5 @@
-from ue4nlp.functions import compute_centroids, compute_covariance
-from models.functions import extract_clsvec_predlabels, mahalanobis_distance
+from ue4nlp.functions import compute_centroids, compute_covariance, mahalanobis_distance
+from models.functions import extract_clsvec_predlabels
 import numpy as np
 
 class UeEstimatorMahalanobis:

@@ -336,7 +336,7 @@ def main(cfg: DictConfig):
     save_dir_path = cfg.path.save_dir_path
 
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
-    ##Mix conf####
+    ##Mix####
     for foldr in five_fold_results:
         true = foldr['labels']
         pred = foldr['score']
@@ -353,11 +353,55 @@ def main(cfg: DictConfig):
                     'rpp': np.mean(fresults_rpp), 
                     'roc': np.mean(fresults_roc), 
                     'rcc_y': fresults_rcc_y}
-    save_path = save_dir_path + '/mixconf'
+    save_path = save_dir_path + '/mix'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
+    fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
+    ##Mix_dp####
+    for foldr in five_fold_results:
+        true = foldr['labels']
+        pred = foldr['mcdp_score']
+        uncertainty = -foldr['mcdp_MP']
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
+        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
+        rpp = calc_rpp(conf=-uncertainty, risk=risk)
+        roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
+        fresults_rcc = np.append(fresults_rcc, rcc_auc)
+        fresults_rcc_y.append(rcc_y)
+        fresults_roc = np.append(fresults_roc, roc_auc)
+        fresults_rpp = np.append(fresults_rpp, rpp)
+    results_dic = {'rcc': np.mean(fresults_rcc), 
+                    'rpp': np.mean(fresults_rpp), 
+                    'roc': np.mean(fresults_roc), 
+                    'rcc_y': fresults_rcc_y}
+    save_path = save_dir_path + '/mix_dp'
+    with open(save_path, mode="wt", encoding="utf-8") as f:
+        json.dump(results_dic, f, ensure_ascii=False)
 
+    fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
+    ##Mix_ense####
+    for foldr in five_fold_results:
+        true = foldr['labels']
+        pred = foldr['ense_score']
+        uncertainty = -foldr['ense_MP']
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
+        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
+        rpp = calc_rpp(conf=-uncertainty, risk=risk)
+        roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
+        fresults_rcc = np.append(fresults_rcc, rcc_auc)
+        fresults_rcc_y.append(rcc_y)
+        fresults_roc = np.append(fresults_roc, roc_auc)
+        fresults_rpp = np.append(fresults_rpp, rpp)
+    results_dic = {'rcc': np.mean(fresults_rcc), 
+                    'rpp': np.mean(fresults_rpp), 
+                    'roc': np.mean(fresults_roc), 
+                    'rcc_y': fresults_rcc_y}
+    save_path = save_dir_path + '/mix_mul'
+    with open(save_path, mode="wt", encoding="utf-8") as f:
+        json.dump(results_dic, f, ensure_ascii=False)
+
+    """
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##Mix MP####
     for foldr in five_fold_results:
@@ -379,6 +423,7 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/mixMP'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
+    """
 
 if __name__ == "__main__":
     main()
