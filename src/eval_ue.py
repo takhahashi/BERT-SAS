@@ -41,7 +41,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['score']
         uncertainty = foldr['calib_var']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
@@ -64,7 +64,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['score']
         uncertainty = -foldr['trust_score']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
@@ -87,7 +87,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['mcdp_score']
         uncertainty = foldr['calib_mcdp_var']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
@@ -111,7 +111,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['ense_score']
         uncertainty = foldr['calib_ense_var']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
@@ -141,7 +141,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = np.argmax(foldr['logits'], axis=-1)
         uncertainty = -foldr['MP']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='class', upper_score=upper_score)
@@ -164,7 +164,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = np.argmax(foldr['logits'], axis=-1)
         uncertainty = -foldr['trust_score']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='class', upper_score=upper_score)
@@ -189,7 +189,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['mcdp_score'] 
         uncertainty = -foldr['mcdp_MP']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='class', upper_score=upper_score)
@@ -211,7 +211,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['mcdp_score'] 
         uncertainty = foldr['mcdp_entropy'] 
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='class', upper_score=upper_score)
@@ -233,7 +233,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['mcdp_score'] 
         uncertainty = foldr['mcdp_epi_uncertainty']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='class', upper_score=upper_score)
@@ -256,7 +256,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['ense_score']
         uncertainty = -foldr['ense_MP']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         try:
@@ -281,7 +281,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['ense_score']
         uncertainty = foldr['ense_entropy']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         try:
@@ -306,7 +306,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['ense_score']
         uncertainty = foldr['ense_epi_uncertainty']
-        risk = calc_risk(pred, true, 'class', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'class', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         try:
@@ -341,7 +341,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['score']
         uncertainty = -foldr['mix_conf']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
@@ -363,7 +363,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['mcdp_score']
         uncertainty = -foldr['mcdp_MP']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
@@ -385,7 +385,7 @@ def main(cfg: DictConfig):
         true = foldr['labels']
         pred = foldr['ense_score']
         uncertainty = -foldr['ense_MP']
-        risk = calc_risk(pred, true, 'reg', upper_score, binary=False)
+        risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
