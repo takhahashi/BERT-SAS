@@ -17,7 +17,7 @@ def down_sample(data, samples=300):
 
 def main():
     #utypes = ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mix', 'mix_dp', 'mix_mul']
-    utypes = ['simplevar', 'reg_mul', 'MP', 'class_mul', 'class_trust_score', 'mix', 'mix_mul']
+    utypes = ['simplevar', 'reg_mul', 'MP', 'class_mul_MP', 'class_trust_score', 'mix', 'mix_mul']
     ###roc_auc###
     roc_dic = {}
     for utype in utypes:
