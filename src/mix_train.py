@@ -10,7 +10,7 @@ from omegaconf import DictConfig
 from pytorch_lightning.loggers import WandbLogger
 from transformers import AutoTokenizer
 from utils.utils_data import TrainDataModule
-from utils.cfunctions import simple_collate_fn, EarlyStopping
+from utils.cfunctions import simple_collate_fn, EarlyStopping, ScaleDiffBalance
 from utils.utils_models import create_module
 from models.functions import return_predresults
 from utils.cfunctions import regvarloss
@@ -57,11 +57,12 @@ def main(cfg: DictConfig):
     model.train()
     crossentropy = nn.CrossEntropyLoss()
     mseloss = nn.MSELoss()
+    weight_d = ScaleDiffBalance(num_tasks=2, beta=1.)
 
     trainloss_list, devloss_list = [], []
     scaler = torch.cuda.amp.GradScaler()
     for epoch in range(cfg.training.n_epochs):
-        lossall = 0
+        lossall, cross_loss, mse_loss = 0, 0, 0
         devlossall = 0
         model.train()
         for data in train_dataloader:
@@ -71,26 +72,28 @@ def main(cfg: DictConfig):
                 outputs = model(data)
                 crossentropy_el = crossentropy(outputs['logits'], int_score)
                 mseloss_el = mseloss(outputs['score'].squeeze(), data['labels'])
-                loss = crossentropy_el + mseloss_el
+                loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
             model.zero_grad()
             lossall += loss.to('cpu').detach().numpy().copy()
+            cross_loss += crossentropy_el.to('cpu').detach().numpy().copy()
+            mse_loss += mseloss_el.to('cpu').detach().numpy().copy()
 
-        trainloss_list = np.append(trainloss_list, lossall/num_train_batch)
+        #trainloss_list = np.append(trainloss_list, lossall/num_train_batch)
         # dev QWKの計算
-        
         model.eval()
         for dev_data in dev_dataloader:
             d_data = {k: v.cuda() for k, v in dev_data.items()}
-            int_score = torch.round(d_data['labels'] * upper_score).to(torch.int32).type(torch.LongTensor)
+            int_score = torch.round(d_data['labels'] * upper_score).to(torch.int32).type(torch.LongTensor).to('cpu')
             dev_outputs = {k: v.to('cpu').detach() for k, v in model(d_data).items()}
             crossentropy_el = crossentropy(dev_outputs['logits'], int_score)
             mseloss_el = mseloss(dev_outputs['score'].squeeze(), d_data['labels'].to('cpu').detach())
-            devlossall += crossentropy_el + mseloss_el
-        devloss_list = np.append(devloss_list, devlossall/num_dev_batch)
-
+            loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
+            devlossall += loss.to('cpu').detach().numpy().copy()
+        #devloss_list = np.append(devloss_list, devlossall/num_dev_batch)
+        weight_d.update(lossall/num_train_batch, cross_loss/num_train_batch, mse_loss/num_train_batch)
         print(f'Epoch:{epoch}, train_Loss:{lossall/num_train_batch:.4f}, dev_loss:{devlossall/num_dev_batch:.4f}')
         earlystopping(devlossall/num_dev_batch, model)
         if(earlystopping.early_stop == True): break
