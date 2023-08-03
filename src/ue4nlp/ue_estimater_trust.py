@@ -1,6 +1,6 @@
 from models.functions import extract_clsvec_predlabels, extract_clsvec_truelabels
 from ue4nlp.functions import sep_features_by_class, diffclass_euclid_dist, sameclass_euclid_dist
-from utils.cfunctions import score_f2int
+
 import numpy as np
 
 class UeEstimatorTrustscore:

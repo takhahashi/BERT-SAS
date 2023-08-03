@@ -80,7 +80,6 @@ def simple_collate_fn(list_of_data):
   batched_tensor['labels'] = torch.tensor(labels)
   return batched_tensor
 
-
 class EarlyStopping:
     """earlystoppingクラス"""
 
