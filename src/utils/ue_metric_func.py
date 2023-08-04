@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.metrics import roc_auc_score
 
-from utils.cfunctions import score_f2int
 
 def calc_rcc_auc(conf, risk):
   n = len(conf)
