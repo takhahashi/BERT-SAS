@@ -74,7 +74,7 @@ def main():
     plt.figure()
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mixconf', 'mixMP']:
+            for utype in ['simplevar', 'reg_mul', 'MP', 'class_mul', 'class_trust_score', 'mix', 'mix_mul']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
