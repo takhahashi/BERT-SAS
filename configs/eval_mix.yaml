@@ -15,14 +15,14 @@ sas:
 ue:
   num_dropout: 5
   ensemble_model_paths: 
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id0
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id1
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id2
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id3
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id4
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id0_scale_only
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id1_scale_only
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id2_scale_only
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id3_scale_only
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id4_scale_only
 path:
   traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/train_data.json
   valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/dev_data.json
   testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/test_data.json
-  model_save_path:  /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id${model.id}
+  model_save_path:  /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id${model.id}_scale_only
   results_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_results/Mix_${sas.score_id}/fold${eval.fold}
