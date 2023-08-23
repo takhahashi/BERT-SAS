@@ -96,8 +96,6 @@ def compute_centroids(train_features, train_labels):
     for label in np.sort(np.unique(train_labels)):
         centroids.append(train_features[train_labels == label].mean(axis=0))
     return np.asarray(centroids)
-    
-    
 
 def compute_covariance(centroids, train_features, train_labels):
     cov = np.zeros((train_features.shape[1], train_features.shape[1]))
