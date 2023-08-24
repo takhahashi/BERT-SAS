@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 import json
 import matplotlib.pyplot as plt
-
+import hydra
+import torch.optim as optim
+from omegaconf import DictConfig
 
 def down_sample(data, samples=300):
     new_data = [[], []]
@@ -14,10 +16,10 @@ def down_sample(data, samples=300):
             new_data[1].append(data[1][i])
     return new_data
 
-
-def main():
+@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_ue_config")
+def main(cfg: DictConfig):
     #utypes = ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mix', 'mix_dp', 'mix_mul']
-    utypes = ['simplevar', 'reg_mul', 'MP', 'class_mul_MP', 'class_trust_score', 'mix', 'mix_mul']
+    utypes = ['simplevar', 'MP', 'class_trust_score', 'mix', 'mix_mul']
     ###roc_auc###
     roc_dic = {}
     for utype in utypes:
@@ -67,25 +69,18 @@ def main():
         n_v = np.append(v, np.round(np.mean(v), decimals=3))
         rcc_dic[k] = n_v
     rcc_table = pd.DataFrame.from_dict(rcc_dic, orient='index', columns=['A_Score','B_Score','C_Score','D_Score','E_Score', 'mean'])
-    rcc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_table.tsv'.format(qtype), sep='\t', index=True)
+    rcc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_table/{}.tsv'.format(qtype, cfg.rcc.metric_type), sep='\t', index=True)
 
 
     ##rcc_y_fig###
     plt.figure()
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in ['simplevar', 'reg_mul', 'MP', 'class_mul', 'class_trust_score', 'mix', 'mix_mul']:
+            for utype in utypes:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
-                min_len = 1000000
-                for rcc_y in results['rcc_y']:
-                    if len(rcc_y) < min_len:
-                        min_len = len(rcc_y)
-                rcc_y_list = []
-                for rcc_y in results['rcc_y']:
-                    rcc_y_list.append(np.array(rcc_y)[:min_len])
-                mean_rcc_y = np.mean(rcc_y_list, axis=0)
+                mean_rcc_y = results['rcc_y']
                 fraction = 1 / len(mean_rcc_y)
                 rcc_x = [fraction]
                 for i in range(len(mean_rcc_y)-1):
@@ -93,7 +88,7 @@ def main():
                 down_data = down_sample([rcc_x, mean_rcc_y], samples=50)
                 plt.plot(down_data[0], down_data[1], label=utype)
             plt.legend()
-            plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}_RCC.png'.format(qtype, stype)) 
+            plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_fig/{}_{}_RCC.png'.format(qtype, cfg.rcc.metric_type, stype)) 
             plt.show()
 
     #table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class', 'mix', 'dp_mix', 'mul_mix']
