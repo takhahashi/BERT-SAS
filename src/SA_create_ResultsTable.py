@@ -11,6 +11,7 @@ def down_sample(data, samples=300):
     n = len(data[0])
     per_sample = n//samples
     for i in range(n):
+        print(i%per_sample, n//samples)
         if (i%per_sample == 0) or (i+1 == n):
             new_data[0].append(data[0][i])
             new_data[1].append(data[1][i])
