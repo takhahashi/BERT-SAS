@@ -1,7 +1,7 @@
 ue:
   binary_risk: True
 rcc:
-  metric_type: rmse
+  metric_type: scaledrmse
 sas:
   question_id: '1_5'
   score_id: 'A_Score'
