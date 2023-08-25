@@ -123,7 +123,7 @@ def main(cfg: DictConfig):
         pred = foldr['ense_score']
         uncertainty = foldr['calib_ense_var']
         risk = calc_risk(pred, true, 'reg', upper_score, binary=True)
-        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
+        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncertainty, cfg.rcc.metric_type, upper_score, reg_or_class='reg', binary_risk=True)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='reg', upper_score=upper_score)
         fresults_rcc = np.append(fresults_rcc, rcc_auc)
@@ -271,7 +271,7 @@ def main(cfg: DictConfig):
         pred = foldr['ense_score']
         uncertainty = -foldr['ense_MP']
         risk = calc_risk(pred, true, 'class', upper_score, binary=True)
-        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(conf=-uncertainty, risk=risk)
+        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncertainty, cfg.rcc.metric_type, upper_score, reg_or_class='reg', binary_risk=True)
         rpp = calc_rpp(conf=-uncertainty, risk=risk)
         try:
             roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='class', upper_score=upper_score)
