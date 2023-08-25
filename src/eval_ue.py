@@ -113,7 +113,7 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/reg_dp'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
-
+    """
 
 
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
@@ -137,7 +137,6 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/reg_mul'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
-    """
 
 
     ##class###
@@ -264,7 +263,7 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
-
+    """
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##class mul MP####
     for foldr in five_fold_results:
@@ -289,7 +288,7 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/class_mul_MP'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
-
+    """
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##class mul####
     for foldr in five_fold_results:

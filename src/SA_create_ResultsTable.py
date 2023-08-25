@@ -19,7 +19,7 @@ def down_sample(data, samples=300):
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_ue_config")
 def main(cfg: DictConfig):
     #utypes = ['simplevar', 'reg_dp', 'reg_mul', 'reg_trust_score', 'MP', 'class_dp', 'class_mul', 'class_trust_score', 'mix', 'mix_dp', 'mix_mul']
-    utypes = ['simplevar', 'MP', 'class_trust_score', 'mix', 'mix_mul']
+    utypes = ['simplevar', 'reg_mul', 'MP', 'class_trust_score', 'class_mul_MP', 'mix', 'mix_mul']
     ###roc_auc###
     roc_dic = {}
     for utype in utypes:
@@ -93,8 +93,8 @@ def main(cfg: DictConfig):
 
     #table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class', 'mix', 'dp_mix', 'mul_mix']
     #utype_path_name = ['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc', 'mix_acc', 'dp_mix_acc', 'ense_mix_acc']
-    table_idx_name = ['reg', 'class','mix', 'mul_mix']
-    utype_path_name = ['simple_reg_acc', 'simple_class_acc', 'mix_acc', 'ense_mix_acc']
+    table_idx_name = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix']
+    utype_path_name = ['simple_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'ense_class_acc', 'mix_acc', 'ense_mix_acc']
     qwk_dic = {}
     for utype in table_idx_name:
         qwk_dic[utype] = []
