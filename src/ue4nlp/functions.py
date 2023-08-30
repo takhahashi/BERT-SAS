@@ -78,9 +78,16 @@ def compute_mulEntropy(numpy_logits, mulnum):
     
     return torch_scores.numpy(), mean_entro.numpy()
 
-def compute_MixMulMP(score, numpy_logits, mulnum, upper_score):
-    sumscore = np.sum(score, axis=0)
-    mulscore = np.divide(sumscore, mulnum)
+def compute_MixMulMP(score, numpy_logits, mulnum, upper_score, expected_score):
+    if expected_score == True:
+        class_scores = np.argmax(numpy_logits, axis=2)
+        reg_scores = np.round(np.multiply(score, upper_score))
+        e_scores = np.divide(class_scores + reg_scores, 2)
+        sumscore = np.sum(np.divide(e_scores, upper_score), axis=0)
+        mulscore = np.divide(sumscore, mulnum)
+    else:
+        sumscore = np.sum(score, axis=0)
+        mulscore = np.divide(sumscore, mulnum)
 
     soft_fn = torch.nn.Softmax(dim=2)
     logits = torch.tensor(numpy_logits)

@@ -12,8 +12,8 @@ class UeEstimatorEnsemble:
         self.reg_or_class = reg_or_class
         self.upper_score = upper_score
         
-    def __call__(self, dataloader):
-        ense_results = self._predict_with_multimodel(dataloader)
+    def __call__(self, dataloader, expected_score=False):
+        ense_results = self._predict_with_multimodel(dataloader, expected_score)
         return ense_results
     
     def _multi_pred(self, dataloader):
@@ -31,7 +31,7 @@ class UeEstimatorEnsemble:
         return mul_results
 
 
-    def _predict_with_multimodel(self, dataloader):
+    def _predict_with_multimodel(self, dataloader, expected_score):
         mul_pred_results = self._multi_pred(dataloader)
         mul_num = len(self.model_paths)
         ense_result = {}
@@ -40,7 +40,7 @@ class UeEstimatorEnsemble:
             ense_result['ense_score'] = mulscore
             ense_result['ense_var'] = mulvar
         elif self.reg_or_class == 'mix':
-            mulscore, mulMP = compute_MixMulMP(mul_pred_results['score'], mul_pred_results['logits'], mul_num, self.upper_score)
+            mulscore, mulMP = compute_MixMulMP(mul_pred_results['score'], mul_pred_results['logits'], mul_num, self.upper_score, expected_score)
             _, mul_entropy = compute_mulEntropy(mul_pred_results['logits'], mul_num)
             ense_result['ense_score'] = mulscore
             ense_result['ense_MP'] = mulMP

@@ -25,6 +25,12 @@ import json
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_mix")
 def main(cfg: DictConfig):
+    if cfg.model.inftype == 'expected_score':
+        expected_score = True
+        save_path_str = cfg.path.results_save_path + '_expected_score'
+    else:
+        expected_score = False
+        save_path_str = cfg.path.resutls_save_path
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
 
@@ -51,6 +57,11 @@ def main(cfg: DictConfig):
     model = Reg_class_mixmodel(bert, num_classes=upper_score+1)
     model.load_state_dict(torch.load(cfg.path.model_save_path))
     eval_results = return_predresults(model, test_dataloader, rt_clsvec=False, dropout=False)
+    if expected_score == True:
+        reg_pred = np.round(eval_results['score'] * upper_score)
+        class_pred = np.argmax(eval_results['logits'], axis=-1)
+        expected_pred = ((reg_pred + class_pred)/2.) / upper_score
+        eval_results['score'] = expected_pred
 
     softmax = nn.Softmax(dim=1)
     pred_int_score = torch.tensor(np.round(eval_results['score'] * upper_score), dtype=torch.int32)
@@ -66,13 +77,13 @@ def main(cfg: DictConfig):
     mcdp_results = mcdp_estimater(test_dataloader)
     eval_results.update(mcdp_results)
 
-
+    
     ensemble_estimater = UeEstimatorEnsemble(model, 
                                              cfg.ue.ensemble_model_paths,
                                              cfg.model.reg_or_class,
                                              upper_score,
                                              )
-    ensemble_results = ensemble_estimater(test_dataloader)
+    ensemble_results = ensemble_estimater(test_dataloader, expected_score=expected_score)
     eval_results.update(ensemble_results)
 
     """
@@ -92,7 +103,7 @@ def main(cfg: DictConfig):
 
     list_results = {k: v.tolist() for k, v in eval_results.items() if type(v) == type(np.array([1, 2, 3.]))}
     
-    with open(cfg.path.results_save_path, mode="wt", encoding="utf-8") as f:
+    with open(save_path_str, mode="wt", encoding="utf-8") as f:
         json.dump(list_results, f, ensure_ascii=False)
     
 
