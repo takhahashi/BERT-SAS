@@ -74,7 +74,7 @@ def main(cfg: DictConfig):
                                    cfg.model.reg_or_class,
                                    upper_score,
                                    )
-    mcdp_results = mcdp_estimater(test_dataloader)
+    mcdp_results = mcdp_estimater(test_dataloader, expected_score)
     eval_results.update(mcdp_results)
 
     
