@@ -10,6 +10,7 @@ def down_sample(data, samples=300):
     new_data = [[], []]
     n = len(data[0])
     per_sample = n//samples
+    print(per_sample, n, samples)
     for i in range(n):
         #print(i%per_sample, n//samples)
         if (i%per_sample == 0) or (i+1 == n):
