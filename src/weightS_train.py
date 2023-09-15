@@ -12,7 +12,7 @@ import json
     
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="weightS_train")
 def main(cfg: DictConfig):
-    para_savepath = cfg.path.savepath
+    para_savepath = cfg.path.save_path
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
 
