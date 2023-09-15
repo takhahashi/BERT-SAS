@@ -20,3 +20,5 @@ path:
   traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${training.fold}/train_data.json
   valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${training.fold}/dev_data.json
   save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/ExpectedW_modelid${model.id}
+  model_save_path:  /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/id${model.id}
+  
