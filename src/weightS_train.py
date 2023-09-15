@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from omegaconf import DictConfig
 from transformers import AutoTokenizer
-from utils.cfunctions import simple_collate_fn,
+from utils.cfunctions import simple_collate_fn
 from models.models import Scaler, Bert, Reg_class_mixmodel, EscoreScaler
 from utils.dataset import get_upper_score, get_dataset
 import json
