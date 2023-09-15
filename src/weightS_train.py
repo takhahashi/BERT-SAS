@@ -10,7 +10,7 @@ from models.models import Scaler, Bert, Reg_class_mixmodel, EscoreScaler
 from utils.dataset import get_upper_score, get_dataset
 import json
     
-@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/1.AES/ASAP/BERT-AES/configs", config_name="weightS_train")
+@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="weightS_train")
 def main(cfg: DictConfig):
     para_savepath = cfg.path.savepath
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
