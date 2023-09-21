@@ -62,7 +62,7 @@ def main(cfg: DictConfig):
         rcc_dic[utype] = []
     for qtype in ['1_5']:
         for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
-            for utype in utypes:
+            for utype in ['MP']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -71,13 +71,13 @@ def main(cfg: DictConfig):
         n_v = np.append(v, np.round(np.mean(v), decimals=3))
         rcc_dic[k] = n_v
     rcc_table = pd.DataFrame.from_dict(rcc_dic, orient='index', columns=['A_Score','B_Score','C_Score','D_Score','E_Score', 'mean'])
-    rcc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_table/{}.tsv'.format(qtype, cfg.rcc.metric_type), sep='\t', index=True)
+    rcc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_table/{}_for_rep.tsv'.format(qtype, cfg.rcc.metric_type), sep='\t', index=True)
 
-    """
+    
     ##rcc_y_fig###
     plt.figure()
     for qtype in ['1_5']:
-        for stype in ['A_Score','B_Score','C_Score','D_Score','E_Score']:
+        for stype in ['A_Score']: #,'B_Score','C_Score','D_Score','E_Score']:
             for utype in utypes:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
@@ -92,7 +92,7 @@ def main(cfg: DictConfig):
             plt.legend()
             plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_fig/{}_{}_RCC.png'.format(qtype, cfg.rcc.metric_type, stype)) 
             plt.show()
-    """
+    
 
     #table_idx_name = ['simple_reg', 'dp_reg', 'mul_reg', 'simple_class', 'dp_class', 'mul_class', 'mix', 'dp_mix', 'mul_mix']
     #utype_path_name = ['simple_reg_acc', 'dp_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'dp_class_acc', 'ense_class_acc', 'mix_acc', 'dp_mix_acc', 'ense_mix_acc']
