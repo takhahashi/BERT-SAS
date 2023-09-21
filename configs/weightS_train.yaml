@@ -1,9 +1,10 @@
 training:
+  learning_rate: 0.1
+  max_iteration: 200
   fold: 0
   test_size: 0.3
   n_epochs: 30
   batch_size: 8
-  learning_rate: 0.00001
   collate_fn: True
   patience: 3
 model:
@@ -21,4 +22,3 @@ path:
   valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${training.fold}/dev_data.json
   save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/ExpectedW_modelid${model.id}
   model_save_path:  /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/id${model.id}
-  

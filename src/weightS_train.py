@@ -37,7 +37,7 @@ def main(cfg: DictConfig):
     e_scaler = EscoreScaler(init_S=0.).cuda()
 
     mseloss = nn.MSELoss()
-    s_opt = torch.optim.LBFGS([e_scaler.S], lr=1, max_iter=200)
+    s_opt = torch.optim.LBFGS([e_scaler.S], lr=cfg.training.learning_rate, max_iter=cfg.training.max_iteration)
     all_class_pred = []
     all_reg_pred = []
     all_true_score = []
@@ -45,7 +45,6 @@ def main(cfg: DictConfig):
     train_loss = 0
     for idx, t_batch in enumerate(train_dataloader):
         batch = {k: v.cuda() for k, v in t_batch.items()}
-        s_opt.zero_grad()
 
         int_score = torch.round(batch['labels'] * upper_score).to(torch.float).cuda()
         outputs = {k: v.to('cpu').detach().numpy().copy() for k, v in model(batch).items()}
