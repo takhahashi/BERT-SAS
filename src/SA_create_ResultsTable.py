@@ -71,14 +71,14 @@ def main(cfg: DictConfig):
         n_v = np.append(v, np.round(np.mean(v), decimals=3))
         rcc_dic[k] = n_v
     rcc_table = pd.DataFrame.from_dict(rcc_dic, orient='index', columns=['A_Score','B_Score','C_Score','D_Score','E_Score', 'mean'])
-    rcc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_table/{}_for_rep.tsv'.format(qtype, cfg.rcc.metric_type), sep='\t', index=True)
+    rcc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_table/{}.tsv'.format(qtype, cfg.rcc.metric_type), sep='\t', index=True)
 
     
     ##rcc_y_fig###
     plt.figure()
     for qtype in ['1_5']:
         for stype in ['A_Score']: #,'B_Score','C_Score','D_Score','E_Score']:
-            for utype in utypes:
+            for utype in ['MP']:
                 with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/{}/{}'.format(qtype, stype, utype)) as f:
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
@@ -90,7 +90,7 @@ def main(cfg: DictConfig):
                 down_data = down_sample([rcc_x, mean_rcc_y], samples=50)
                 plt.plot(down_data[0], down_data[1], label=utype)
             plt.legend()
-            plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_fig/{}_{}_RCC.png'.format(qtype, cfg.rcc.metric_type, stype)) 
+            plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_fig/{}_{}_RCC_for_report.png'.format(qtype, cfg.rcc.metric_type, stype)) 
             plt.show()
     
 
