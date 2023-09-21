@@ -89,7 +89,7 @@ def main(cfg: DictConfig):
                     rcc_x = np.append(rcc_x, fraction+rcc_x[-1])
                 down_data = down_sample([rcc_x, mean_rcc_y], samples=25)
                 plt.plot(down_data[0], down_data[1])
-            plt.xlabel('coverage')
+            plt.xlabel('被覆率')
             plt.ylabel('RMSE')
             plt.legend()
             plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_fig/{}_{}_RCC_for_report.png'.format(qtype, cfg.rcc.metric_type, stype)) 
