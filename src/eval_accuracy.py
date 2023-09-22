@@ -262,6 +262,28 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/ense_mix_expected_score_acc'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
+        
+    ##Mix####
+    five_fold_results = []
+    for fold in range(5):
+        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Mix_{}/fold{}_weighted_exp_score'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
+            fold_results = json.load(f)
+        five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
+    corr_arr, qwk_arr, rmse_arr = [], [], []
+    for foldr in five_fold_results:
+        true = np.round(foldr['labels'] * upper_score).astype('int32')
+        pred = np.round(foldr['score'] * upper_score).astype('int32')
+        corr_arr = np.append(corr_arr, np.corrcoef(true, pred)[0][1])
+        qwk_arr = np.append(qwk_arr, cohen_kappa_score(true, pred, labels = list(range(upper_score+1)), weights='quadratic'))
+        rmse_arr = np.append(rmse_arr, np.sqrt((true - pred) ** 2).mean())
+    results_dic = {'qwk': np.mean(qwk_arr), 
+                    'corr': np.mean(corr_arr), 
+                    'rmse': np.mean(rmse_arr)}
+
+    save_path = save_dir_path + '/mix_weighted_exp_score_acc'
+    with open(save_path, mode="wt", encoding="utf-8") as f:
+        json.dump(results_dic, f, ensure_ascii=False)
+        
 if __name__ == "__main__":
     main()
