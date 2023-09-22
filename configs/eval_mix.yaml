@@ -3,7 +3,7 @@ eval:
   batch_size: 8
   collate_fn: True
 model:
-  inftype: 'expected_score'
+  inftype: weighted_exp_score
   model_name_or_path: 'bert-base-uncased'
   reg_or_class: 'mix'
   max_length: 512
@@ -27,3 +27,4 @@ path:
   testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/test_data.json
   model_save_path:  /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${eval.fold}/id${model.id}
   results_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_results/Mix_${sas.score_id}/fold${eval.fold}
+  scaler_savepath: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/ExpectedW_modelid${model.id}
