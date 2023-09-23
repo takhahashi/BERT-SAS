@@ -16,6 +16,7 @@ def main():
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##simple var####
     for foldr in five_fold_results:
+        plt.figure()
         true = foldr['labels']
         pred = np.argmax(foldr['logits'], axis=-1)
         uncertainty = -foldr['MP']
