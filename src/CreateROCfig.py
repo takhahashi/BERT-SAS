@@ -22,7 +22,7 @@ def main():
         uncertainty = -foldr['MP']
         risk = (true != pred).astype('int32')
         fpr, tpr, thresholds = roc_curve(risk, uncertainty)
-        plt.plot(fpr, tpr, marker='o')
+        plt.plot(fpr, tpr)
         plt.xlabel('FPR: False positive rate')
         plt.ylabel('TPR: True positive rate')
         plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/roc_fig/{}_{}.png'.format('1_5', 'A_Score', fold))
