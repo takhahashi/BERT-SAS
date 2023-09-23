@@ -15,7 +15,7 @@ def main():
 
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##simple var####
-    for foldr in five_fold_results:
+    for fold, foldr in enumerate(five_fold_results):
         plt.figure()
         true = foldr['labels']
         pred = np.argmax(foldr['logits'], axis=-1)
@@ -25,7 +25,7 @@ def main():
         plt.plot(fpr, tpr, marker='o')
         plt.xlabel('FPR: False positive rate')
         plt.ylabel('TPR: True positive rate')
-        plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/roc_fig/{}_{}.png'.format('1_5', 'A_Score', foldr))
+        plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/roc_fig/{}_{}.png'.format('1_5', 'A_Score', fold))
 
 if __name__ == "__main__":
     main()
