@@ -25,7 +25,6 @@ def main():
         plt.plot(fpr, tpr, marker='o')
         plt.xlabel('FPR: False positive rate')
         plt.ylabel('TPR: True positive rate')
-        plt.grid()
         plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/roc_fig/{}_{}.png'.format('1_5', 'A_Score', fold))
 
 if __name__ == "__main__":
