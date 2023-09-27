@@ -13,13 +13,14 @@ model:
   id: 0
   num_labels: None
 sas:
+  prompt_id: 'Y14'
   question_id: '1_5'
   score_id: A_Score
   friendly_score: True
 path:
-  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${training.fold}/train_data.json
-  valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${training.fold}/dev_data.json
-  save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${training.fold}/id${model.id}
+  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/train_data.json
+  valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/dev_data.json
+  save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${training.fold}/id${model.id}
 wandb:
   project: Class_SAS_${sas.question_id}_${sas.score_id}
   project_name: fold${training.fold}_id${model.id}
