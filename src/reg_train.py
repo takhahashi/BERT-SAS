@@ -111,6 +111,5 @@ def main(cfg: DictConfig):
         if earlystopping.early_stop == True:
             break
 
-
 if __name__ == "__main__":
     main()
