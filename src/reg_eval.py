@@ -125,6 +125,7 @@ def main(cfg: DictConfig):
     ensemble_estimater = UeEstimatorEnsemble(model,
                                             cfg.ue.ensemble_model_paths,
                                             cfg.model.reg_or_class,
+                                            upper_score
                                             )
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
