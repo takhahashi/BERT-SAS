@@ -20,7 +20,7 @@ class UeEstimatorEnsemble:
         mul_results = {}
         model = self.model
         for model_path in self.model_paths:
-            model.load_state_dict(torch.load(model_path))
+            model.load_state_dict(torch.load(model_path), strict=False)
             pred_result = return_predresults(model, dataloader, rt_clsvec=False, dropout=False)
             del pred_result['labels']
             if len(mul_results) == 0:

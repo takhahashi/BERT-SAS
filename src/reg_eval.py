@@ -25,24 +25,25 @@ from utils.dataset import get_upper_score, get_dataset
 import json
 
 
-@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_config")
+@hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="reg_eval")
 def main(cfg: DictConfig):
 
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
 
-
+    """
     with open(cfg.path.traindata_file_name) as f:
         train_dataf = json.load(f)
     train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
     with open(cfg.path.valdata_file_name) as f:
         dev_dataf = json.load(f)
     dev_dataset = get_dataset(dev_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
+    """
     with open(cfg.path.testdata_file_name) as f:
         test_dataf = json.load(f)
     test_dataset = get_dataset(test_dataf, cfg.sas.score_id, upper_score, cfg.model.reg_or_class, tokenizer)
 
-
+    """
     train_dataloader = torch.utils.data.DataLoader(train_dataset, 
                                                     batch_size=cfg.eval.batch_size, 
                                                     shuffle=False, 
@@ -53,6 +54,7 @@ def main(cfg: DictConfig):
                                                 shuffle=False, 
                                                 drop_last=False, 
                                                 collate_fn=simple_collate_fn)
+    """
     test_dataloader = torch.utils.data.DataLoader(test_dataset, 
                                                 batch_size=cfg.eval.batch_size, 
                                                 shuffle=False, 
@@ -65,13 +67,13 @@ def main(cfg: DictConfig):
                           learning_rate=1e-5, 
                           num_labels=cfg.model.num_labels, 
                           )
-    model.load_state_dict(torch.load(cfg.path.model_save_path))
+    model.load_state_dict(torch.load(cfg.path.model_save_path), strict=False)
     
 
-    dev_results = return_predresults(model, dev_dataloader, rt_clsvec=False, dropout=False)
+    #dev_results = return_predresults(model, dev_dataloader, rt_clsvec=False, dropout=False)
     eval_results = return_predresults(model, test_dataloader, rt_clsvec=False, dropout=False)
 
-
+    """
     #####calib step#####
     calib_var_estimater = UeEstimatorCalibvar(dev_labels=torch.tensor(dev_results['labels']),
                                               dev_score=torch.tensor(dev_results['score']),
@@ -117,7 +119,7 @@ def main(cfg: DictConfig):
     calib_mcdp_var_estimater.fit_ue()
     calib_mcdp_var = calib_mcdp_var_estimater(logvar = torch.tensor(mcdp_results['mcdp_var']).log())
     eval_results.update({'calib_mcdp_var': calib_mcdp_var})
-
+    """
 
 
     ensemble_estimater = UeEstimatorEnsemble(model,
@@ -127,6 +129,7 @@ def main(cfg: DictConfig):
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
     
+    """
     #####calib ense var ##########
     dev_ense_results = ensemble_estimater(dev_dataloader)
     calib_ense_var_estimater = UeEstimatorCalibvar(dev_labels=torch.tensor(dev_results['labels']),
@@ -136,6 +139,7 @@ def main(cfg: DictConfig):
     calib_ense_var_estimater.fit_ue()
     calib_ense_var = calib_ense_var_estimater(logvar = torch.tensor(ensemble_results['ense_var']).log())
     eval_results.update({'calib_ense_var': calib_ense_var})
+    """
     
 
 
