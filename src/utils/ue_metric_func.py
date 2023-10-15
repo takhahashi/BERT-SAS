@@ -54,8 +54,11 @@ def calc_rcc_auc_scaledrmse(pred, true, conf, upper_score, reg_or_class):
   if reg_or_class == 'reg':
     pred_org = np.round(pred * upper_score).astype('int32')
     true_org = np.round(true * upper_score).astype('int32')
-  else:
+  elif reg_or_class == 'class':
     pred_org = pred.astype('int32')
+    true_org = true.astype('int32')
+  elif reg_or_class == 'gp':
+    pred_org = np.round(pred).astype('int32')
     true_org = true.astype('int32')
   pred_scaled = pred_org/upper_score
   true_scaled = true_org/upper_score
@@ -90,8 +93,11 @@ def calc_roc_auc(pred, true, conf, reg_or_class, upper_score=None):
   if reg_or_class == 'reg':
     int_scores = np.round(pred * upper_score).astype('int32')
     int_true = np.round(true * upper_score).astype('int32')
-  else:
+  elif reg_or_class == 'class':
     int_scores = pred.astype('int32')
+    int_true = true.astype('int32')
+  elif reg_or_class == 'gp':
+    int_scores = np.round(pred).astype('int32')
     int_true = true.astype('int32')
   return roc_auc_score(int_scores == int_true, conf)
 
@@ -100,8 +106,11 @@ def calc_risk(pred, true, reg_or_class, upper_score=None, binary=False):
     if reg_or_class =='reg':
       int_scores = np.round(pred * upper_score).astype('int32')
       int_true = np.round(true * upper_score).astype('int32')
-    else:
+    elif reg_or_class == 'class':
       int_scores = pred.astype('int32')
+      int_true = true.astype('int32')
+    elif reg_or_class == 'gp':
+      int_scores = np.round(pred).astype('int32')
       int_true = true.astype('int32')
     return (int_scores != int_true).astype('int32')
   else:

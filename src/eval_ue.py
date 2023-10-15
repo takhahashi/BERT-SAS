@@ -339,7 +339,36 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
     """
+    five_fold_results = []
+    for fold in range(5):
+        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/GP_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
+            fold_results = json.load(f)
+        five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
+    save_dir_path = cfg.path.save_dir_path
+
+    fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
+    ##GP###
+    for foldr in five_fold_results:
+        true = foldr['labels']
+        pred = foldr['score']
+        uncertainty = foldr['std']
+        risk = calc_risk(pred, true, 'gp', upper_score, binary=True)
+        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncertainty, cfg.rcc.metric_type, upper_score, reg_or_class='gp', binary_risk=True)
+        rpp = calc_rpp(conf=-uncertainty, risk=risk)
+        roc_auc = calc_roc_auc(pred, true, conf=-uncertainty, reg_or_class='gp', upper_score=upper_score)
+        fresults_rcc = np.append(fresults_rcc, rcc_auc)
+        fresults_rcc_y.append(rcc_y)
+        fresults_roc = np.append(fresults_roc, roc_auc)
+        fresults_rpp = np.append(fresults_rpp, rpp)
+    mean_rcc_y = calc_mean_rcc_y(fresults_rcc_y)
+    results_dic = {'rcc': np.mean(fresults_rcc), 
+                   'rpp': np.mean(fresults_rpp), 
+                   'roc': np.mean(fresults_roc), 
+                   'rcc_y': mean_rcc_y}
+    save_path = save_dir_path + '/gp'
+    with open(save_path, mode="wt", encoding="utf-8") as f:
+        json.dump(results_dic, f, ensure_ascii=False)
     
     five_fold_results = []
     for fold in range(5):

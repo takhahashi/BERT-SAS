@@ -64,7 +64,6 @@ def main(cfg: DictConfig):
     likelihood.eval()
     model.eval()
 
-
     predictions = model(test_x)
     mean = predictions.mean.cpu().detach().numpy()
     std = predictions.stddev.cpu().detach().numpy()
