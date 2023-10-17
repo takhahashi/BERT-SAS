@@ -9,20 +9,21 @@ model:
   num_labels: None
   id: 0
 sas:
-  question_id: '1_5'
+  prompt_id: 'Y14'
+  question_id: '1-2_1_3'
   score_id: A_Score
   friendly_score: True
 ue:
   num_dropout: 5
   ensemble_model_paths: 
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id0
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id1
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id2
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id3
-    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id4
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id0
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id1
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id2
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id3
+    - /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id4
 path:
-  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/train_data.json
-  valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/dev_data.json
-  testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_data/Y15_2-3_${sas.question_id}_fold${eval.fold}/test_data.json
-  model_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id0
-  results_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/${sas.question_id}_results/Class_${sas.score_id}/fold${eval.fold}
+  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${eval.fold}/train_data.json
+  valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${eval.fold}/dev_data.json
+  testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${eval.fold}/test_data.json
+  model_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id${model.id}
+  results_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_results/Class_${sas.score_id}/fold${eval.fold}

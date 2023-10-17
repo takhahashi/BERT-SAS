@@ -42,7 +42,7 @@ def main(cfg: DictConfig):
     roc_table = pd.DataFrame.from_dict(roc_dic, orient='index', columns=['A_Score','B_Score','C_Score','D_Score','E_Score', 'mean'])
     roc_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/roc_table.tsv'.format(qtype), sep='\t', index=True)
 
-    ##rpp##
+    ###rpp###
     rpp_dic = {}
     for utype in unames:
         rpp_dic[utype] = []
@@ -59,7 +59,7 @@ def main(cfg: DictConfig):
     rpp_table = pd.DataFrame.from_dict(rpp_dic, orient='index', columns=['A_Score','B_Score','C_Score','D_Score','E_Score', 'mean'])
     rpp_table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rpp_table.tsv'.format(qtype), sep='\t', index=True)
 
-    ##rcc###
+    ###rcc###
     rcc_dic = {}
     for utype in unames:
         rcc_dic[utype] = []

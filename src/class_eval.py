@@ -75,7 +75,8 @@ def main(cfg: DictConfig):
     trust_estimater.fit_ue()
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
-
+    
+    """
     maha_estimater = UeEstimatorMahalanobis(model,
                                              train_dataloader,
                                              upper_score,
@@ -90,6 +91,7 @@ def main(cfg: DictConfig):
                                    )
     mcdp_results = mcdp_estimater(test_dataloader)
     eval_results.update(mcdp_results)
+    """
 
 
     ensemble_estimater = UeEstimatorEnsemble(model, 
