@@ -94,6 +94,7 @@ def main(cfg: DictConfig):
                 plt.plot(down_data[0], down_data[1])
             plt.xlabel('coverage')
             plt.ylabel('RMSE')
+            plt.legend()
             plt.savefig('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/{}_results/rcc_fig/{}_{}_RCC_for_report.png'.format(qtype, cfg.rcc.metric_type, stype)) 
             plt.show()
     
