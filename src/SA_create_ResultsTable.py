@@ -91,7 +91,7 @@ def main(cfg: DictConfig):
                 for i in range(len(mean_rcc_y)-1):
                     rcc_x = np.append(rcc_x, fraction+rcc_x[-1])
                 down_data = down_sample([rcc_x, mean_rcc_y], samples=25)
-                plt.plot(down_data[0], down_data[1])
+                plt.plot(down_data[0], down_data[1], label=utype)
             plt.xlabel('coverage')
             plt.ylabel('RMSE')
             plt.legend()
