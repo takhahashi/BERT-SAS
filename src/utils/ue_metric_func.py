@@ -60,6 +60,7 @@ def calc_rcc_auc_scaledrmse(pred, true, conf, upper_score, reg_or_class):
   elif reg_or_class == 'gp':
     pred_org = np.round(pred).astype('int32')
     true_org = true.astype('int32')
+
   pred_scaled = pred_org/upper_score
   true_scaled = true_org/upper_score
   risk = (pred_scaled - true_scaled) ** 2
