@@ -87,14 +87,11 @@ upper_score_dic = {
 def get_upper_score(q_id, s_id):
      return upper_score_dic[q_id][s_id]
 
-def get_dataset(dataf, upper_s, inftype, tokenizer, s_id=None):
+def get_dataset(dataf, s_id, upper_s, inftype, tokenizer):
   text, score = [], []
   for data in dataf:
     text.append(data['mecab'].replace(' ', ''))
-    if s_id is None:
-      score.append(data['score'])
-    else:
-      score.append(data[s_id])
+    score.append(data[s_id])
   encoding = tokenizer(text, max_length=512, padding='max_length', truncation=True, return_tensors='pt')
   if inftype == 'reg' or inftype == 'mix':
     labels = torch.div(torch.tensor(score, dtype=torch.float32), upper_s)
