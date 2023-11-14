@@ -13,8 +13,8 @@ model:
   id: 0
   num_labels: None
 sas:
-  prompt_id: 'Y14'
-  question_id: '1-2_1_3'
+  prompt_id: 'Y15'
+  question_id: '1_5'
   score_id: A_Score
   friendly_score: True
 path:
