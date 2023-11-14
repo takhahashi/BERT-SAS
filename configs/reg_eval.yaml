@@ -9,9 +9,9 @@ model:
   num_labels: None
   id: 0
 sas:
-  prompt_id: 'Y14'
-  question_id: '1-2_1_3'
-  score_id: A_Score
+  prompt_id: 'Y15'
+  question_id: '1_5'
+  score_id: 'score'
   friendly_score: True
 ue:
   num_dropout: 5
