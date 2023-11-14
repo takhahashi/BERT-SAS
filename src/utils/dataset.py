@@ -20,6 +20,7 @@ class DataSet:
 
 upper_score_dic = {
   '1_5': {
+      'score': 16,
       'A_Score': 3,
       'B_Score': 3,
       'C_Score': 2, 
@@ -27,6 +28,7 @@ upper_score_dic = {
       'E_Score': 4
   },
   '2_2': {
+      'score': 12,
       'A_Score': 3,
       'B_Score': 2,
       'C_Score': 2, 
@@ -34,6 +36,7 @@ upper_score_dic = {
       'E_Score': 2
   },
   '2_4': {
+      'score': 14,
       'A_Score': 2,
       'B_Score': 3,
       'C_Score': 3, 
@@ -41,34 +44,40 @@ upper_score_dic = {
       'E_Score': 2
   },  
   '1-2_1_3': { 
+      'score': 16,
       'A_Score': 2,
       'B_Score': 5,
       'C_Score': 3, 
       'D_Score': 6,
   },
   '1-2_2_4': { 
+      'score': 12,
       'A_Score': 3,
       'B_Score': 2,
       'C_Score': 4, 
       'D_Score': 3,
   },
   '2-1_1_5': { 
+      'score': 15,
       'A_Score': 2,
       'B_Score': 7,
       'C_Score': 6, 
   },
   '2-1_2_3': { 
+      'score': 12,
       'A_Score': 3,
       'B_Score': 4,
       'C_Score': 3, 
       'D_Score': 2,
   },
   '2-2_1_4': { 
+      'score': 15,
       'A_Score': 6,
       'B_Score': 3,
       'C_Score': 6, 
   },
   '2-2_2_3': { 
+      'score': 14,
       'A_Score': 6,
       'B_Score': 6,
       'C_Score': 2, 
@@ -78,11 +87,14 @@ upper_score_dic = {
 def get_upper_score(q_id, s_id):
      return upper_score_dic[q_id][s_id]
 
-def get_dataset(dataf, s_id, upper_s, inftype, tokenizer):
+def get_dataset(dataf, upper_s, inftype, tokenizer, s_id=None):
   text, score = [], []
   for data in dataf:
     text.append(data['mecab'].replace(' ', ''))
-    score.append(data[s_id])
+    if s_id is None:
+      score.append(data['score'])
+    else:
+      score.append(data[s_id])
   encoding = tokenizer(text, max_length=512, padding='max_length', truncation=True, return_tensors='pt')
   if inftype == 'reg' or inftype == 'mix':
     labels = torch.div(torch.tensor(score, dtype=torch.float32), upper_s)
