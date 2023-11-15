@@ -19,7 +19,7 @@ class DataSet:
             'labels': self.labels[index]}
 
 upper_score_dic = {
-  '1_5': {
+  '2-3_1_5': {
       'score': 16,
       'A_Score': 3,
       'B_Score': 3,
@@ -27,7 +27,7 @@ upper_score_dic = {
       'D_Score': 4,
       'E_Score': 4
   },
-  '2_2': {
+  '2-3_2_2': {
       'score': 12,
       'A_Score': 3,
       'B_Score': 2,
@@ -35,7 +35,7 @@ upper_score_dic = {
       'D_Score': 3,
       'E_Score': 2
   },
-  '2_4': {
+  '2-3_2_4': {
       'score': 14,
       'A_Score': 2,
       'B_Score': 3,
