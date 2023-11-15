@@ -14,7 +14,7 @@ model:
   num_labels: None
 sas:
   prompt_id: 'Y15'
-  question_id: '1_5'
+  question_id: '2-3_1_5'
   score_id: 'score'
   friendly_score: True
 path:
