@@ -10,8 +10,8 @@ model:
   num_labels: None
   id: 0
 sas:
-  prompt_id: 'Y14'
-  question_id: '1-2_1_3'
+  prompt_id: 'Y15'
+  question_id: '2-3_1_5'
   score_id: A_Score
   friendly_score: True
 ue:
