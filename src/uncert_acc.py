@@ -19,7 +19,7 @@ def main(cfg: DictConfig):
 
     five_fold_rpp, five_fold_roc, five_fold_rcc, five_fold_rcc_y = [], [], [], []
     for true, pred, uncert in zip(five_fold_trues, five_fold_preds, five_fold_uncert):
-        if true[0] != np.int32 and pred[0] != np.int32:
+        if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
             raise ValueError(f'`{type(true[0])}` is not valid type')
         five_fold_rpp = np.append(five_fold_rpp, calc_rpp(true, pred, uncert))
         five_fold_roc = np.append(five_fold_roc, roc_auc_score(true == pred, -uncert))

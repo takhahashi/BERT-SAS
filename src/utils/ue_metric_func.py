@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.metrics import roc_auc_score
 
 def calc_rcc_auc(true, pred, conf, metric_type, upper_score=None):
-  if true[0] != np.int32 and pred[0] != np.int32:
+  if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
     raise ValueError(f'`{type(true[0])}` is not valid type')
   if metric_type == 'normal':
     risk = (true != pred).astype('int32')
@@ -29,7 +29,7 @@ def calc_rcc_auc(true, pred, conf, metric_type, upper_score=None):
   return auc, points_x, points_y
 
 def calc_rcc_auc_simple(true, pred, conf):
-  if true[0] != np.int32 and pred[0] != np.int32:
+  if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
     raise ValueError(f'`{type(true[0])}` is not valid type')
   risk = (true != pred).astype('int32')
   n = len(conf)
@@ -47,7 +47,7 @@ def calc_rcc_auc_simple(true, pred, conf):
   return auc, points_x, points_y
 
 def calc_rcc_auc_rmse(pred, true, conf):
-  if true[0] != np.int32 and pred[0] != np.int32:
+  if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
     raise ValueError(f'`{type(true[0])}` is not valid type')
   risk = (pred - true) ** 2
   n = len(conf)
@@ -93,7 +93,7 @@ def calc_rcc_auc_scaledrmse(pred, true, conf, upper_score, reg_or_class):
   return auc, points_x, points_y
 
 def calc_rpp(true: np.ndarray, pred: np.ndarray, uncert: np.ndarray):
-  if true[0] != np.int32 and pred[0] != np.int32:
+  if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
     raise ValueError(f'`{type(true[0])}` is not valid type')
   risk = (true != pred).astype('int32')
   conf = -uncert
