@@ -114,14 +114,9 @@ def calc_rmse(true, pred):
             if type(t[0]) != np.int32:
                 raise ValueError(f'`{type(t[0])}` is not valid type')
             rmses = np.append(rmses, np.sqrt((t - p) ** 2).mean())
-        return rmse
+        return rmses
     else:
-        return cohen_kappa_score(true, pred, labels = list(range(upper_score+1)), weights='quadratic')
-            
-    
-
-
-
+        return np.sqrt((true - pred) ** 2).mean()
 
 
 if __name__ == "__main__":
