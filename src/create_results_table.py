@@ -31,7 +31,10 @@ def result_table(model_or_uncert_types, metric, question_id):
                     fold_results = json.load(f)
                 results = {k: np.array(v) for k, v in fold_results.items()}
                 results_dic[m_or_u_type] = np.append(results_dic[m_or_u_type], np.round(results[metric], decimals=3))
-        table = pd.DataFrame.from_dict(results_dic, orient='index', columns=list(question_id))
+        for k, v in results_dic.items():
+            n_v = np.append(v, np.round(np.mean(v), decimals=3))
+            results_dic[k] = n_v
+        table = pd.DataFrame.from_dict(results_dic, orient='index', columns=list(question_id).append('mean'))
         table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/results_table/all_results_{}_table.tsv'.format(metric), sep='\t', index=True)
     else:
         print('これからつくる')
