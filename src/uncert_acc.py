@@ -23,7 +23,7 @@ def main(cfg: DictConfig):
             raise ValueError(f'`{type(true[0])}` is not valid type')
         five_fold_rpp = np.append(five_fold_rpp, calc_rpp(true, pred, uncert))
         five_fold_roc = np.append(five_fold_roc, roc_auc_score(true == pred, -uncert))
-        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncert, 'scaledrmse', upper_score)
+        rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncert, cfg.rcc.metric_type, upper_score)
         five_fold_rcc = np.append(five_fold_rcc, rcc_auc)
         five_fold_rcc_y.append(rcc_y)
     results_dic = {'rcc': np.mean(five_fold_rcc),
