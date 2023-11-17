@@ -3,24 +3,8 @@ import os
 import json
 import hydra
 import numpy as np
-import pandas as pd
-import pytorch_lightning as pl
-import torch
-import torch.nn as nn
-import torch.optim as optim
 from omegaconf import DictConfig
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
-from pytorch_lightning.loggers import WandbLogger
-from transformers import AutoTokenizer
-from utils.utils_data import TrainDataModule
-from utils.cfunctions import simple_collate_fn
-from utils.utils_models import create_module
 from utils.dataset import get_upper_score
-from utils.ue_metric_func import calc_rcc_auc, calc_rpp, calc_roc_auc, calc_risk
-from models.functions import return_predresults
-from ue4nlp.ue_estimater_ensemble import UeEstimatorEnsemble
-from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
-from ue4nlp.ue_estimater_mcd import UeEstimatorDp
 from sklearn.metrics import cohen_kappa_score
 
 
@@ -54,7 +38,7 @@ def main(cfg: DictConfig):
         json.dump(results_dic, f, ensure_ascii=False)
     
 
-
+    """
     corr_arr, qwk_arr, rmse_arr = [], [], []
     ##dp reg####
     for foldr in five_fold_results:
@@ -71,6 +55,7 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/dp_reg_acc'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
+    """
 
 
 
@@ -118,7 +103,7 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
-
+    """
     corr_arr, qwk_arr, rmse_arr = [], [], []
     ##dp_class####
     for foldr in five_fold_results:
@@ -135,7 +120,7 @@ def main(cfg: DictConfig):
     save_path = save_dir_path + '/dp_class_acc'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
-
+    """
 
     corr_arr, qwk_arr, rmse_arr = [], [], []
     ##ense_class####
@@ -171,7 +156,7 @@ def main(cfg: DictConfig):
     results_dic = {'qwk': np.mean(qwk_arr), 
                     'corr': np.mean(corr_arr), 
                     'rmse': np.mean(rmse_arr)}
-
+4
     save_path = save_dir_path + '/gp_acc'
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
