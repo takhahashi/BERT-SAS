@@ -19,7 +19,7 @@ def main(cfg: DictConfig):
 def result_table(model_or_uncert_types, metric, question_id):
     results_dic = {}
     for m_or_u_type in model_or_uncert_types:
-        results_dic[type] = []
+        results_dic[m_or_u_type] = []
     if type(question_id) == omegaconf.listconfig.ListConfig:
         for qid in question_id:
             for m_or_u_type in model_or_uncert_types:
