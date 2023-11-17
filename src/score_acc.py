@@ -20,6 +20,7 @@ def main(cfg: DictConfig):
     results_dic = {'qwk': np.mean(five_fold_qwks), 
                     'corr': np.mean(five_fold_corrs), 
                     'rmse': np.mean(five_fold_rmses)}
+    print(five_fold_qwks)
 
     save_path = save_dir_path + '/' + model_type
     with open(save_path, mode="wt", encoding="utf-8") as f:
