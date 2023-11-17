@@ -1,9 +1,13 @@
 ue:
+  uncert_type: 'default'
   binary_risk: True
+model:
+  model_type: 'class'
 rcc:
   metric_type: scaledrmse
 sas:
-  question_id: '1_5'
-  score_id: 'A_Score'
+  prompt_id: 'Y15'
+  question_id: '2-3_1_5'
+  score_id: 'score'
 path:
-  save_dir_path: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/Y15/${sas.question_id}_results/${sas.score_id}
+  save_dir_path: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_results/${sas.score_id}
