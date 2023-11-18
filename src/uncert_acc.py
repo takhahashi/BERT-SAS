@@ -18,7 +18,7 @@ def main(cfg: DictConfig):
     five_fold_trues, five_fold_preds, five_fold_uncert = extract_true_pred_uncert(five_fold_model_outputs, model_type, uncert_type, upper_score)
 
     five_fold_rpp, five_fold_roc, five_fold_rcc, five_fold_rcc_y = [], [], [], []
-    for idx, true, pred, uncert in enumerate(zip(five_fold_trues, five_fold_preds, five_fold_uncert)):
+    for idx, (true, pred, uncert) in enumerate(zip(five_fold_trues, five_fold_preds, five_fold_uncert)):
         if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
             raise ValueError(f'`{type(true[0])}` is not valid type')
         five_fold_rpp = np.append(five_fold_rpp, calc_rpp(true, pred, uncert))
