@@ -53,7 +53,7 @@ def result_table(model_or_uncert_types, metric, question_id):
             n_v = np.append(v, np.round(np.mean(v), decimals=3))
             results_dic[k] = n_v
         table = pd.DataFrame.from_dict(results_dic, orient='index', columns=list(upper_score_dic[question_id].keys())[1:].append('mean'))
-        table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/results_table/{}_{}_table.tsv'.format(score_id, metric), sep='\t', index=True)
+        table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/results_table/{}_{}_table.tsv'.format(question_id, metric), sep='\t', index=True)
 
     return table
 
