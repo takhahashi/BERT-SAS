@@ -12,8 +12,8 @@ sas:
   score_id: A_Score
   friendly_score: True
 path:  
-  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/Y15_${sas.question_id}_data/${sas.prompt_id}_2-3_${sas.question_id}_fold${eval.fold}/train_data.json
-  testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/Y15_${sas.question_id}_data/${sas.prompt_id}_2-3_${sas.question_id}_fold${eval.fold}/test_data.json
+  traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${eval.fold}/train_data.json
+  testdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${eval.fold}/test_data.json
   scoring_model_savepath: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${eval.fold}/id${scoring_model.id}
   GPmodel_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/GP_${sas.score_id}/fold${eval.fold}/id${scoring_model.id}
   results_save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_results/GP_${sas.score_id}/fold${eval.fold}
