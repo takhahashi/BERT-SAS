@@ -37,7 +37,22 @@ def result_table(model_or_uncert_types, metric, question_id):
         table = pd.DataFrame.from_dict(results_dic, orient='index', columns=list(question_id).append('mean'))
         table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/results_table/all_results_{}_table.tsv'.format(metric), sep='\t', index=True)
     else:
-        print('これからつくる')
+        for score_id in list(upper_score_dic[question_id].keys())[1:]:
+            for m_or_u_type in model_or_uncert_types:
+                if question_id in ['2-3_1_5', '2-3_2_2', '2-3_2_4']:
+                    prompt_id = 'Y15'
+                else:
+                    prompt_id = 'Y14' 
+                with open('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/{}/{}_results/{}/{}'.format(prompt_id, qid, score_id, m_or_u_type)) as f:
+                    fold_results = json.load(f)
+                results = {k: np.array(v) for k, v in fold_results.items()}
+                results_dic[m_or_u_type] = np.append(results_dic[m_or_u_type], np.round(results[metric], decimals=3))
+        for k, v in results_dic.items():
+            n_v = np.append(v, np.round(np.mean(v), decimals=3))
+            results_dic[k] = n_v
+        table = pd.DataFrame.from_dict(results_dic, orient='index', columns=list(upper_score_dic[question_id].keys())[1:].append('mean'))
+        table.to_csv('/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/results_table/{}_{}_table.tsv'.format(score_id, metric), sep='\t', index=True)
+
     return table
 
 if __name__ == "__main__":
