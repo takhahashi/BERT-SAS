@@ -18,11 +18,14 @@ def main(cfg: DictConfig):
     five_fold_trues, five_fold_preds, five_fold_uncert = extract_true_pred_uncert(five_fold_model_outputs, model_type, uncert_type, upper_score)
 
     five_fold_rpp, five_fold_roc, five_fold_rcc, five_fold_rcc_y = [], [], [], []
-    for true, pred, uncert in zip(five_fold_trues, five_fold_preds, five_fold_uncert):
+    for idx, true, pred, uncert in enumerate(zip(five_fold_trues, five_fold_preds, five_fold_uncert)):
         if type(true[0]) != np.int32 and type(pred[0]) != np.int32:
             raise ValueError(f'`{type(true[0])}` is not valid type')
         five_fold_rpp = np.append(five_fold_rpp, calc_rpp(true, pred, uncert))
-        five_fold_roc = np.append(five_fold_roc, roc_auc_score(true == pred, -uncert))
+        try:
+            five_fold_roc = np.append(five_fold_roc, roc_auc_score(true == pred, -uncert))
+        except:
+            print(f'{cfg.prompt_id} {cfg.question_id} {cfg.score_id} fold{idx} cannnot calc roc')
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncert, cfg.rcc.metric_type, upper_score)
         five_fold_rcc = np.append(five_fold_rcc, rcc_auc)
         five_fold_rcc_y.append(rcc_y)
