@@ -2,6 +2,7 @@ import os
 import hydra
 import torch
 import gpytorch
+import numpy as np
 
 from omegaconf import DictConfig
 from transformers import AutoTokenizer
@@ -51,6 +52,7 @@ def main(cfg: DictConfig):
             training_iter = cfg.training.iter_num
             model.train()
             likelihood.train()
+            model.covar_module.base_kernel.lengthscale = np.linalg.norm(train_x[0].numpy() - train_x[1].numpy().T) ** 2 / 2
 
             # Use the adam optimizer
             optimizer = torch.optim.Adam([
