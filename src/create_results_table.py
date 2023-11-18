@@ -14,8 +14,8 @@ def main(cfg: DictConfig):
     #unames = ['simplevar', 'reg_mul', 'MP', 'class_mul_MP', 'mix', 'mix_mul', 'class_trust_score', 'gp']
     for uncert_metric in ['rcc', 'rpp', 'roc']:
         table = result_table(unames, uncert_metric, cfg.sas.question_id)
-    #model_names = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix']
-    model_names = ['simple_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'ense_class_acc', 'mix_acc', 'ense_mix_acc', 'gp_acc']
+    model_names = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix']
+    #model_names = ['simple_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'ense_class_acc', 'mix_acc', 'ense_mix_acc', 'gp_acc']
     for score_acc_metric in ['qwk', 'corr', 'rmse']:
         table = result_table(model_names, score_acc_metric, cfg.sas.question_id)
 
