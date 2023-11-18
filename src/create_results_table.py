@@ -9,8 +9,8 @@ from utils.dataset import upper_score_dic
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="results_table")
 def main(cfg: DictConfig):
-    #unames = ['reg_default', 'mul_reg_default', 'class_default', 'mul_class_default', 'mix_default', 'mul_mix_default']
-    unames = ['simplevar', 'reg_mul', 'MP', 'class_mul_MP', 'mix', 'mix_mul', 'class_trust_score', 'gp']
+    unames = ['reg_default', 'mul_reg_default', 'class_default', 'mul_class_default', 'mix_default', 'mul_mix_default']
+    #unames = ['simplevar', 'reg_mul', 'MP', 'class_mul_MP', 'mix', 'mix_mul', 'class_trust_score', 'gp']
     for uncert_metric in ['rcc', 'rpp', 'roc']:
         table = result_table(unames, uncert_metric, cfg.sas.question_id)
     #model_names = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix']
