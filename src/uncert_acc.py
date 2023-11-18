@@ -116,14 +116,14 @@ def extract_true_pred_uncert(five_fold_results, model_type, uncert_type, upper_s
             pred = np.round(fold_result['labels'] * upper_score).astype('int32')
             true = np.round(fold_result['score'] * upper_score).astype('int32')
             if uncert_type == 'default':
-                uncert = fold_result['mix_conf']
+                uncert = -fold_result['mix_conf']
             else:
                 raise ValueError(f'`{uncert_type}` is not valid')
         elif model_type == 'mul_mix':
             true = np.round(fold_result['labels'] * upper_score).astype('int32')
             pred = np.round(fold_result['ense_score'] * upper_score).astype('int32')
             if uncert_type == 'default':
-                uncert = fold_result['ense_MP']
+                uncert = -fold_result['ense_MP']
             else:
                 raise ValueError(f'`{uncert_type}` is not valid')
         elif model_type == 'gp':
