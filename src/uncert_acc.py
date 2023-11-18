@@ -25,7 +25,7 @@ def main(cfg: DictConfig):
         try:
             five_fold_roc = np.append(five_fold_roc, roc_auc_score(true == pred, -uncert))
         except:
-            print(f'{cfg.prompt_id} {cfg.question_id} {cfg.score_id} fold{idx} cannnot calc roc')
+            print(f'{cfg.sas.prompt_id} {cfg.sas.question_id} {cfg.sas.score_id} fold{idx} cannnot calc roc')
         rcc_auc, rcc_x, rcc_y = calc_rcc_auc(true, pred, -uncert, cfg.rcc.metric_type, upper_score)
         five_fold_rcc = np.append(five_fold_rcc, rcc_auc)
         five_fold_rcc_y.append(rcc_y)
