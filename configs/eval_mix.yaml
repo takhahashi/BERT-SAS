@@ -1,4 +1,4 @@
-tyeval:
+eval:
   fold: 0
   batch_size: 8
   collate_fn: True

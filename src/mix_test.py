@@ -5,20 +5,13 @@ import pandas as pd
 import pytorch_lightning as pl
 import torch
 import torch.nn as nn
-import torch.optim as optim
 from omegaconf import DictConfig
-from pytorch_lightning.loggers import WandbLogger
 from transformers import AutoTokenizer
-from utils.utils_data import TrainDataModule
 from utils.cfunctions import simple_collate_fn, EarlyStopping
-from utils.utils_models import create_module
 from models.functions import return_predresults
-from utils.cfunctions import regvarloss
 from models.models import Scaler, Bert, Reg_class_mixmodel, EscoreScaler
-from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
 from ue4nlp.ue_estimater_ensemble import UeEstimatorEnsemble
-from ue4nlp.ue_estimater_trust import UeEstimatorTrustscore
-from ue4nlp.ue_estimater_mcd import UeEstimatorDp
+
 from utils.dataset import get_upper_score, get_dataset
 import json
 
