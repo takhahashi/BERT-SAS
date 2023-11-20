@@ -60,6 +60,8 @@ class UeEstimatorTrustscore:
                 trust_score_values = np.append(trust_score_values, 0.)
             else:
                 trust_score = diffclass_dist / (diffclass_dist + sameclass_dist)
+                if trust_score == float('nan'):
+                    print(f'diff_class_dst:{diffclass_dist}, same_class_dst:{sameclass_dist}')
                 trust_score_values = np.append(trust_score_values, trust_score)
         eval_results = {'trust_score': trust_score_values}
         return eval_results
