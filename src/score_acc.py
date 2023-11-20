@@ -48,7 +48,7 @@ def load_five_fold_results(prompt_id, question_id, score_id, model_type):
     elif model_type == 'gp':
         five_fold_results = []
         for fold in range(5):
-            with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/gp_{}/fold{}'.format(prompt_id, question_id, score_id, fold)) as f:
+            with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/GP_{}/fold{}'.format(prompt_id, question_id, score_id, fold)) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     else:
