@@ -15,6 +15,7 @@ import json
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="GP_eval")
 def main(cfg: DictConfig):
+    print(1111)
     tokenizer = AutoTokenizer.from_pretrained(cfg.scoring_model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
     with open(cfg.path.traindata_file_name) as f:
