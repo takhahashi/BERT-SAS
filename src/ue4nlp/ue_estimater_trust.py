@@ -55,14 +55,14 @@ class UeEstimatorTrustscore:
     def _predict_with_fitted_clsvec(self, X_features, labels):
         trust_score_values = []
         for x_feature, label in zip(X_features, labels):
-            diffclass_dist = diffclass_euclid_dist(x_feature, label, self.class_features)
-            sameclass_dist= sameclass_euclid_dist(x_feature, label, self.class_features)
+            diffclass_dist, cnt_diff = diffclass_euclid_dist(x_feature, label, self.class_features)
+            sameclass_dist, cnt_same = sameclass_euclid_dist(x_feature, label, self.class_features)
             if sameclass_dist is None:
                 trust_score_values = np.append(trust_score_values, 0.)
             else:
                 trust_score = diffclass_dist / (diffclass_dist + sameclass_dist)
                 if math.isnan(trust_score):
-                    print(f'diff_class_dst:{diffclass_dist}, same_class_dst:{sameclass_dist}')
+                    print(f'cnt_diff:{cnt_diff}, cnt_same{cnt_same}, diff_class_dst:{diffclass_dist}, same_class_dst:{sameclass_dist}')
                 trust_score_values = np.append(trust_score_values, trust_score)
         eval_results = {'trust_score': trust_score_values}
         return eval_results
