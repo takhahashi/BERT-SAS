@@ -2,6 +2,7 @@ from models.functions import extract_clsvec_predlabels, extract_clsvec_truelabel
 from ue4nlp.functions import sep_features_by_class, diffclass_euclid_dist, sameclass_euclid_dist
 
 import numpy as np
+import math
 
 class UeEstimatorTrustscore:
     def __init__(self, model, train_dataloader, upper_score, reg_or_class):
@@ -60,7 +61,7 @@ class UeEstimatorTrustscore:
                 trust_score_values = np.append(trust_score_values, 0.)
             else:
                 trust_score = diffclass_dist / (diffclass_dist + sameclass_dist)
-                if trust_score == float('nan'):
+                if math.isnan(trust_score):
                     print(f'diff_class_dst:{diffclass_dist}, same_class_dst:{sameclass_dist}')
                 trust_score_values = np.append(trust_score_values, trust_score)
         eval_results = {'trust_score': trust_score_values}
