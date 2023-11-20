@@ -17,8 +17,6 @@ import json
 def main(cfg: DictConfig):
     tokenizer = AutoTokenizer.from_pretrained(cfg.scoring_model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
-
-
     with open(cfg.path.traindata_file_name) as f:
         train_dataf = json.load(f)
     train_dataset = get_dataset(train_dataf, cfg.sas.score_id, upper_score, cfg.scoring_model.reg_or_class, tokenizer)
