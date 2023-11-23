@@ -69,7 +69,7 @@ def main(cfg: DictConfig):
     model.train()
     model = model.cuda()
 
-    earlystopping = EarlyStopping(patience=cfg.training.patience, verbose=True, path=cfg.path.save_path)
+    earlystopping = EarlyStopping(patience=cfg.training.patience, verbose=True, path=save_path)
 
     scaler = torch.cuda.amp.GradScaler()
 
