@@ -6,12 +6,15 @@ training:
   learning_rate: 0.00001
   collate_fn: True
   patience: 3
+  regularization_metric: False
+  regularization_cer: False
 model:
   model_name_or_path: 'bert-base-uncased'
   reg_or_class: 'class'
   max_length: 512
   id: 0
   num_labels: None
+  spectral_norm: False
 sas:
   prompt_id: 'Y15'
   question_id: '2-3_1_5'

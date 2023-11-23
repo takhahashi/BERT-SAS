@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 from omegaconf import DictConfig
 from transformers import AutoTokenizer
-from utils.cfunctions import simple_collate_fn, EarlyStopping
+from utils.cfunctions import simple_collate_fn, EarlyStopping, compute_loss_cer, compute_loss_metric
 from utils.utils_models import create_module
 from utils.dataset import get_upper_score, get_dataset
 import json
@@ -14,6 +14,24 @@ import json
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="train_class_config")
 def main(cfg: DictConfig):
     cwd = hydra.utils.get_original_cwd()
+    if cfg.model.spectral_norm == True:
+        save_path = cfg.path.save_path + '_sepctralnorm'
+        print('SpectralNorm is applyed!')
+        if cfg.training.regularization_metric == True:
+            save_path = save_path + '_loss_reg_metric'
+            print('loss regularization of metric is applyed!')
+        elif cfg.training.regularization_cer == True:
+            save_path = save_path + '_loss_reg_cer'
+            print('loss regularization of metric is applyed!')
+    else:
+        save_path = cfg.path.save_path
+        print('SpectralNorm is not applyed!')
+        if cfg.training.regularization_metric == True:
+            save_path = save_path + '_loss_reg_metric'
+            print('loss regularization of metric is applyed!')
+        elif cfg.training.regularization_cer == True:
+            save_path = save_path + '_loss_reg_cer'
+            print('loss regularization of metric is applyed!')
 
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
@@ -43,12 +61,14 @@ def main(cfg: DictConfig):
         cfg.model.reg_or_class,
         cfg.training.learning_rate,
         num_labels=num_labels,
+        spectral_norm=cfg.model.spectral_norm,
         )
     optimizer = optim.AdamW(model.parameters(), lr=cfg.training.learning_rate)
 
 
     model.train()
     model = model.cuda()
+
     earlystopping = EarlyStopping(patience=cfg.training.patience, verbose=True, path=cfg.path.save_path)
 
     scaler = torch.cuda.amp.GradScaler()
@@ -61,6 +81,16 @@ def main(cfg: DictConfig):
             batch = {k: v.cuda() for k, v in t_batch.items()}
             with torch.cuda.amp.autocast():
                 training_step_outputs = model.training_step(batch, idx)
+                if cfg.training.regularization_metric == True:
+                    loss = compute_loss_metric(training_step_outputs['hidden_state'],
+                                               training_step_outputs['labels'],
+                                               training_step_outputs['loss'],
+                                               num_labels)
+                if cfg.training.regularization_cer == True:
+                    loss = compute_loss_cer(training_step_outputs['logits'],
+                                               training_step_outputs['labels'],
+                                               training_step_outputs['loss'],
+                                               num_labels)
             scaler.scale(training_step_outputs['loss']).backward()
             scaler.step(optimizer)
             scaler.update()

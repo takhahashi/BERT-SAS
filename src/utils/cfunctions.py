@@ -2,6 +2,98 @@ import torch
 import numpy as np
 from sklearn.metrics import cohen_kappa_score, mean_squared_error, accuracy_score, roc_auc_score
 
+def multiclass_metric_loss_fast(represent, target, margin=10, class_num=2, start_idx=1,
+                                per_class_norm=False):
+    target_list = target.data.tolist()
+    dim = represent.data.shape[1]
+    indices = []
+    for class_idx in range(start_idx, class_num + start_idx):
+        indice_i = [i for i, x in enumerate(target_list) if x == class_idx]
+        indices.append(indice_i)
+
+    loss_intra = torch.FloatTensor([0]).to(represent.device)
+    num_intra = 0
+    loss_inter = torch.FloatTensor([0]).to(represent.device)
+    num_inter = 0
+    for i in range(class_num):
+        curr_repr = represent[indices[i]]
+        s_k = len(indices[i])
+        triangle_matrix = torch.triu(
+            (curr_repr.unsqueeze(1) - curr_repr).norm(2, dim=-1)
+        )
+        buf_loss = torch.sum(1 / dim * (triangle_matrix ** 2))
+        if per_class_norm:
+            loss_intra += buf_loss / np.max([(s_k ** 2 - s_k), 1]) * 2
+        else:
+            loss_intra += buf_loss
+            num_intra += (curr_repr.shape[0] ** 2 - curr_repr.shape[0]) / 2
+        for j in range(i + 1, class_num):
+            repr_j = represent[indices[j]]
+            s_q = len(indices[j])
+            matrix = (curr_repr.unsqueeze(1) - repr_j).norm(2, dim=-1)
+            inter_buf_loss = torch.sum(torch.clamp(margin - 1 / dim * (matrix ** 2), min=0))
+            if per_class_norm:
+                loss_inter += inter_buf_loss / np.max([(s_k * s_q), 1])
+            else:
+                loss_inter += inter_buf_loss
+                num_inter += repr_j.shape[0] * curr_repr.shape[0]
+    if num_intra > 0 and not(per_class_norm):
+        loss_intra = loss_intra / num_intra
+    if num_inter > 0 and not(per_class_norm):
+        loss_inter = loss_inter / num_inter
+    return loss_intra, loss_inter
+
+
+def compute_loss_cer(logits, labels, loss, lamb=0.5, unpad=False):
+    """Computes regularization term for loss with CER
+    """
+    # here correctness is always 0 or 1
+    if unpad:
+        # NER case
+        logits = logits[torch.nonzero(labels != -100, as_tuple=True)]
+        labels = labels[torch.nonzero(labels != -100, as_tuple=True)]
+    # suppose that -1 will works for ner and cls
+    confidence, prediction = torch.softmax(logits, dim=-1).max(dim=-1)
+    correctness = prediction == labels
+    correct_confidence = torch.masked_select(confidence, correctness)
+    wrong_confidence = torch.masked_select(confidence, ~correctness)
+    regularizer = 0
+    if unpad:
+        # speed up for NER
+        regularizer = torch.sum(
+            torch.clamp(wrong_confidence.unsqueeze(1) - correct_confidence, min=0)
+            ** 2
+        )
+    else:
+        for cc in correct_confidence:
+            for wc in wrong_confidence:
+                regularizer += torch.clamp(wc - cc, min=0) ** 2
+    loss += lamb * regularizer
+    return loss
+
+
+def compute_loss_metric(hiddens, labels, loss, num_labels,
+                        margin=10, lamb_intra=0.5, lamb=0.5, unpad=False):
+    """Computes regularization term for loss with Metric loss
+    """
+    if unpad:
+        hiddens = hiddens[torch.nonzero(labels != -100, as_tuple=True)]
+        labels = labels[torch.nonzero(labels != -100, as_tuple=True)]
+    class_num = num_labels
+    start_idx = 0
+    # TODO: define represent, target and margin
+    # Get only sentence representaions
+    loss_intra, loss_inter = multiclass_metric_loss_fast(
+        hiddens,
+        labels,
+        margin=margin,
+        class_num=class_num,
+        start_idx=start_idx,
+    )
+    loss_metric = lamb_intra * loss_intra[0] + lamb * loss_inter[0]
+    loss += loss_metric
+    return loss
+
 class ScaleDiffBalance:
   def __init__(self, num_tasks, priority=None, beta=1.):
     self.num_tasks = num_tasks
