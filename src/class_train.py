@@ -22,7 +22,7 @@ def main(cfg: DictConfig):
             print('loss regularization of metric is applyed!')
         elif cfg.training.regularization_cer == True:
             save_path = save_path + '_loss_reg_cer'
-            print('loss regularization of metric is applyed!')
+            print('loss regularization of cer is applyed!')
     else:
         save_path = cfg.path.save_path
         print('SpectralNorm is not applyed!')
@@ -31,7 +31,7 @@ def main(cfg: DictConfig):
             print('loss regularization of metric is applyed!')
         elif cfg.training.regularization_cer == True:
             save_path = save_path + '_loss_reg_cer'
-            print('loss regularization of metric is applyed!')
+            print('loss regularization of cer is applyed!')
 
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
