@@ -86,17 +86,19 @@ def main(cfg: DictConfig):
                                                training_step_outputs['labels'],
                                                training_step_outputs['loss'],
                                                num_labels)
-                if cfg.training.regularization_cer == True:
+                elif cfg.training.regularization_cer == True:
                     loss = compute_loss_cer(training_step_outputs['logits'],
                                                training_step_outputs['labels'],
                                                training_step_outputs['loss'],
                                                num_labels)
-            scaler.scale(training_step_outputs['loss']).backward()
+                else:
+                    loss = training_step_outputs['loss']
+            scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
             model.zero_grad()
 
-            train_loss_all += training_step_outputs['loss'].to('cpu').detach().numpy().copy()
+            train_loss_all += loss.to('cpu').detach().numpy().copy()
 
         for idx, d_batch in enumerate(dev_dataloader):
             batch = {k: v.cuda() for k, v in d_batch.items()}
