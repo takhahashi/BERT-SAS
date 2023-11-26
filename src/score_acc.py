@@ -79,7 +79,7 @@ def extract_true_pred(five_fold_results, model_type, upper_score):
             pred = np.round(fold_result['ense_score'] * upper_score).astype('int32')
         elif model_type == 'gp':
             true = np.round(fold_result['labels']).astype('int32')
-            pred = fold_result['score'].astype('int32')
+            pred = np.round(fold_result['score']).astype('int32')
         else:
             raise ValueError(f'`{model_type}` is not valid')
         trues.append(true)

@@ -129,7 +129,6 @@ def extract_true_pred_uncert(five_fold_results, model_type, uncert_type, upper_s
         elif model_type == 'gp':
             true = np.round(fold_result['labels']).astype('int32')
             pred = np.round(fold_result['score']).astype('int32')
-            print(true, pred)
             if uncert_type == 'default':
                 uncert = fold_result['std']
             else:
