@@ -111,6 +111,8 @@ def extract_true_pred_uncert(five_fold_results, model_type, uncert_type, upper_s
                 uncert = -fold_result['MP']
             elif uncert_type == 'trust':
                 uncert = -fold_result['trust_score']
+            elif uncert_type == 'mahalanobis':
+                uncert = -fold_result['mahalanobis_distance']
             else:
                 raise ValueError(f'`{uncert_type}` is not valid')
         elif model_type == 'mul_class':
