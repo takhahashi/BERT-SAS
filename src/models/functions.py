@@ -45,7 +45,7 @@ def return_predresults(model, test_dataloader, rt_clsvec, dropout = False):
         print()
     return eval_results
 
-def extract_clsvec_truelabels(model, dataloader):
+def extract_clsvec_truelabels(model, dataloader, reg_or_class, upper_score):
     bert = model.bert
     bert.eval()
     bert = bert.cuda()
@@ -65,7 +65,12 @@ def extract_clsvec_truelabels(model, dataloader):
         else:
             cls_outputs.update(y_true)
             eval_results = {k1: np.concatenate([v1, v2]) for (k1, v1), (k2, v2) in zip(eval_results.items(), cls_outputs.items())}
-    return eval_results['hidden_state'], eval_results['labels']
+        
+        if reg_or_class == 'reg' or reg_or_class == 'mix':
+            labels = np.round(eval_results['labels'] * upper_score).astype('int32')
+        else:
+            labels = eval_results['labels'].astype('int32')
+    return eval_results['hidden_state'], labels
 
 def extract_clsvec_predlabels(model, dataloader):
     model.eval()

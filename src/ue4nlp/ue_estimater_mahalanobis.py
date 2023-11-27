@@ -1,5 +1,5 @@
 from ue4nlp.functions import compute_centroids, compute_covariance, mahalanobis_distance
-from models.functions import extract_clsvec_predlabels
+from models.functions import extract_clsvec_predlabels, extract_clsvec_truelabels
 import numpy as np
 
 class UeEstimatorMahalanobis:
@@ -37,10 +37,14 @@ class UeEstimatorMahalanobis:
     
     def _extract_features_and_predlabels(self, data_loader):
         model = self.model
-        X_features, predlabels = extract_clsvec_predlabels(model, data_loader)
+        X_features, predlabels = extract_clsvec_predlabels(model, data_loader, self.reg_or_class, self.upper_score)
         return X_features, predlabels
       
-
+    def _extract_features_and_truelabels(self, data_loader):
+        model = self.model
+        X_features, predlabels = extract_clsvec_truelabels(model, data_loader, self.reg_or_class, self.upper_score)
+        return X_features, predlabels
+    
     def _predict_with_fitted_cov(self, X_features, y):
         eval_results = {}
         md = mahalanobis_distance(None, 
