@@ -14,7 +14,7 @@ def main(cfg: DictConfig):
     uncert_type = cfg.ue.uncert_type
     save_dir_path = cfg.path.save_dir_path
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
-    five_fold_model_outputs = load_five_fold_results(cfg.sas.prompt_id, cfg.sas.question_id, cfg.sas.score_id, model_type)
+    five_fold_model_outputs = load_five_fold_results(cfg.sas.prompt_id, cfg.sas.question_id, cfg.sas.score_id, model_type, cfg.model.spectral_norm, cfg.model.reg_metric, cfg.model.reg_cer)
     five_fold_trues, five_fold_preds, five_fold_uncert = extract_true_pred_uncert(five_fold_model_outputs, model_type, uncert_type, upper_score)
 
     five_fold_rpp, five_fold_roc, five_fold_rcc, five_fold_rcc_y = [], [], [], []
@@ -49,29 +49,37 @@ def calc_mean_rcc_y(rcc_y_lis):
     mean_rcc_y = np.mean(rcc_y_arr, axis=0)
     return mean_rcc_y.tolist()
 
-def load_five_fold_results(prompt_id, question_id, score_id, model_type):
+def load_five_fold_results(prompt_id, question_id, score_id, model_type, spectral_norm=False, reg_metric=False, reg_cer=False):
     five_fold_results = []
     if model_type == 'reg' or model_type == 'mul_reg':
         for fold in range(5):
-            with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Reg_{}/fold{}'.format(prompt_id, question_id, score_id, fold)) as f:
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Reg_{}/fold{}'.format(prompt_id, question_id, score_id, fold)
+            file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
+            with open(file_path) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     elif model_type == 'class' or model_type == 'mul_class':
         five_fold_results = []
         for fold in range(5):
-            with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Class_{}/fold{}'.format(prompt_id, question_id, score_id, fold)) as f:
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Class_{}/fold{}'.format(prompt_id, question_id, score_id, fold)
+            file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
+            with open(file_path) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     elif model_type == 'mix' or model_type == 'mul_mix':
         five_fold_results = []
         for fold in range(5):
-            with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Mix_{}/fold{}'.format(prompt_id, question_id, score_id, fold)) as f:
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Mix_{}/fold{}'.format(prompt_id, question_id, score_id, fold)
+            file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
+            with open(file_path) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     elif model_type == 'gp':
         five_fold_results = []
         for fold in range(5):
-            with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/GP_{}/fold{}'.format(prompt_id, question_id, score_id, fold)) as f:
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/GP_{}/fold{}'.format(prompt_id, question_id, score_id, fold)
+            file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
+            with open(file_path) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     else:
@@ -140,6 +148,15 @@ def extract_true_pred_uncert(five_fold_results, model_type, uncert_type, upper_s
         trues.append(true)
         preds.append(pred)
     return trues, preds, uncerts
+
+def check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer):
+    if spectral_norm == True:
+        file_path = file_path + '_spectralnorm'
+    if reg_metric == True:
+        file_path = file_path + '_loss_reg_metric'
+    elif reg_cer == True:
+        file_path = file_path + '_loss_reg_cer'
+    return file_path
 
 
 if __name__ == "__main__":

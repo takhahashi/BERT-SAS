@@ -66,11 +66,7 @@ def extract_clsvec_truelabels(model, dataloader, reg_or_class, upper_score):
             cls_outputs.update(y_true)
             eval_results = {k1: np.concatenate([v1, v2]) for (k1, v1), (k2, v2) in zip(eval_results.items(), cls_outputs.items())}
         
-        if reg_or_class == 'reg' or reg_or_class == 'mix':
-            labels = np.round(eval_results['labels'] * upper_score).astype('int32')
-        else:
-            labels = eval_results['labels'].astype('int32')
-    return eval_results['hidden_state'], labels
+    return eval_results['hidden_state'], eval_results['labels']
 
 def extract_clsvec_predlabels(model, dataloader):
     model.eval()

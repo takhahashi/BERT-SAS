@@ -10,14 +10,14 @@ class UeEstimatorMahalanobis:
         self.upper_score = upper_score
         
     def __call__(self, dataloader):
-        if self.reg_or_class == 'reg':
+        if self.reg_or_class == 'reg' or self.reg_or_class == 'mix':
             X_features, _ = self._extract_features_and_predlabels(dataloader)
         else: 
             X_features, _ = self._extract_features_and_predlabels(dataloader)
         return self._predict_with_fitted_cov(X_features)
     
     def fit_ue(self):
-        if self.reg_or_class == 'reg':
+        if self.reg_or_class == 'reg' or self.reg_or_class == 'mix':
             X_features, y_scaled = self._extract_features_and_truelabels(self.train_dataloader)
             y = np.round(y_scaled * self.upper_score)
         else:
@@ -35,13 +35,13 @@ class UeEstimatorMahalanobis:
     
     def _extract_features_and_predlabels(self, data_loader):
         model = self.model
-        X_features, predlabels = extract_clsvec_predlabels(model, data_loader, self.reg_or_class, self.upper_score)
-        return X_features, predlabels
+        X_features, pred_score = extract_clsvec_predlabels(model, data_loader)
+        return X_features, pred_score
       
     def _extract_features_and_truelabels(self, data_loader):
         model = self.model
-        X_features, predlabels = extract_clsvec_truelabels(model, data_loader, self.reg_or_class, self.upper_score)
-        return X_features, predlabels
+        X_features, truelabels = extract_clsvec_truelabels(model, data_loader)
+        return X_features, truelabels
     
     def _predict_with_fitted_cov(self, X_features):
         eval_results = {}
