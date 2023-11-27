@@ -5,6 +5,9 @@ eval:
 model:
   model_name_or_path: 'bert-base-uncased'
   reg_or_class: 'class'
+  spectral_norm: True
+  regularization_metric: True
+  regularization_cer: True
   max_length: 512
   num_labels: None
   id: 0

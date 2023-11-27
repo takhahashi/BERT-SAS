@@ -27,6 +27,25 @@ import json
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_class_config")
 def main(cfg: DictConfig):
 
+    if cfg.model.spectral_norm == True:
+        model_save_path = cfg.path.save_path + '_sepctralnorm'
+        results_save_path = cfg.path.results_save_path + '_sepctralnorm'
+        print('SpectralNorm is applyed!')
+    else:
+        model_save_path = cfg.path.save_path
+        results_save_path = cfg.path.results_save_path
+        print('SpectralNorm is not applyed!')
+        
+    if cfg.model.regularization_metric == True:
+        model_save_path = model_save_path + '_loss_reg_metric'
+        results_save_path = results_save_path + '_loss_reg_metric'
+        print('loss regularization of metric is applyed!')
+    elif cfg.model.regularization_cer == True:
+        model_save_path = model_save_path + '_loss_reg_cer'
+        results_save_path = results_save_path + '_loss_reg_cer'
+        print('loss regularization of cer is applyed!')
+
+
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
 
@@ -56,8 +75,9 @@ def main(cfg: DictConfig):
                           cfg.model.reg_or_class, 
                           learning_rate=1e-5, 
                           num_labels=upper_score+1, 
+                          spectral_norm=cfg.model.spectral_norm,
                           )
-    model.load_state_dict(torch.load(cfg.path.model_save_path))
+    model.load_state_dict(torch.load(model_save_path))
 
     eval_results = return_predresults(model, test_dataloader, rt_clsvec=False, dropout=False)
 
@@ -84,7 +104,7 @@ def main(cfg: DictConfig):
     maha_estimater.fit_ue()
     maha_results = maha_estimater(test_dataloader)
     eval_results.update(maha_results)
-    
+
     """
     mcdp_estimater = UeEstimatorDp(model,
                                    cfg.ue.num_dropout,
@@ -110,7 +130,7 @@ def main(cfg: DictConfig):
         else:
             list_results.update({k: v})
 
-    with open(cfg.path.results_save_path, mode="wt", encoding="utf-8") as f:
+    with open(results_save_path, mode="wt", encoding="utf-8") as f:
         json.dump(list_results, f, ensure_ascii=False)
     
 
