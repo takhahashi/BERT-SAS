@@ -5,7 +5,7 @@ import numpy as np
 class UeEstimatorMahalanobis:
     def __init__(self, model, train_dataloader, upper_score, reg_or_class):
         self.model = model
-        self.train_dataset = train_dataloader
+        self.train_dataloader = train_dataloader
         self.reg_or_class = reg_or_class
         self.upper_score = upper_score
         

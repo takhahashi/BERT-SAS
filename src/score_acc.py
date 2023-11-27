@@ -119,6 +119,14 @@ def calc_rmse(true, pred):
     else:
         return np.sqrt((true - pred) ** 2).mean()
 
+def check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer):
+    if spectral_norm == True:
+        file_path = file_path + '_spectralnorm'
+    if reg_metric == True:
+        file_path = file_path + '_loss_reg_metric'
+    elif reg_cer == True:
+        file_path = file_path + '_loss_reg_cer'
+    return file_path
 
 if __name__ == "__main__":
     main()
