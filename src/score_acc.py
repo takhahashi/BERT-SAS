@@ -13,7 +13,7 @@ def main(cfg: DictConfig):
     model_type = cfg.model.model_type
     save_dir_path = cfg.path.save_dir_path
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
-    five_fold_model_outputs = load_five_fold_results(cfg.sas.prompt_id, cfg.sas.question_id, cfg.sas.score_id, model_type, cfg.model.spectral_norm, cfg.model.reg_metric, cfg.model.reg_cer)
+    five_fold_model_outputs = load_five_fold_results(cfg.sas.prompt_id, cfg.sas.question_id, cfg.sas.score_id, model_type, cfg.model.spectral_norm, cfg.model.regularization_metric, cfg.model.regularization_cer)
     five_fold_trues, five_fold_preds, _ = extract_true_pred_uncert(five_fold_model_outputs, model_type, uncert_type='default', upper_score=upper_score)
     five_fold_corrs = calc_corr(five_fold_trues, five_fold_preds)
     five_fold_qwks = calc_qwk(five_fold_trues, five_fold_preds, upper_score)
@@ -24,7 +24,7 @@ def main(cfg: DictConfig):
     print(five_fold_qwks)
 
     save_path = save_dir_path + '/' + model_type
-    save_path = check_spectralnorm_regurarization_and_add_path(save_path, cfg.model.spectral_norm, cfg.model.reg_metric, cfg.model.reg_cer)
+    save_path = check_spectralnorm_regurarization_and_add_path(save_path, cfg.model.spectral_norm, cfg.model.regularization_metric, cfg.model.regularization_cer)
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
 
