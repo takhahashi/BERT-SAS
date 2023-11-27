@@ -28,14 +28,14 @@ import json
 def main(cfg: DictConfig):
 
     if cfg.model.spectral_norm == True:
-        model_save_path = cfg.path.save_path + '_sepctralnorm'
+        model_save_path = cfg.path.model_save_path + '_sepctralnorm'
         results_save_path = cfg.path.results_save_path + '_sepctralnorm'
         print('SpectralNorm is applyed!')
     else:
-        model_save_path = cfg.path.save_path
+        model_save_path = cfg.path.model_save_path
         results_save_path = cfg.path.results_save_path
         print('SpectralNorm is not applyed!')
-        
+
     if cfg.model.regularization_metric == True:
         model_save_path = model_save_path + '_loss_reg_metric'
         results_save_path = results_save_path + '_loss_reg_metric'
