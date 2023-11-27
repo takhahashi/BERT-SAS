@@ -6,7 +6,7 @@ import numpy as np
 from omegaconf import DictConfig
 from utils.dataset import get_upper_score
 from utils.ue_metric_func import calc_rcc_auc, calc_rpp
-from utils.utils_eval_acc_ue import load_five_fold_results, extract_true_pred_uncert
+from utils.utils_eval_acc_ue import load_five_fold_results, extract_true_pred_uncert, check_spectralnorm_regurarization_and_add_path
 from sklearn.metrics import roc_auc_score
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="eval_ue_config")
@@ -36,6 +36,7 @@ def main(cfg: DictConfig):
                    'rcc_y': calc_mean_rcc_y(five_fold_rcc_y)}
 
     save_path = save_dir_path + '/' + model_type + '_' + uncert_type
+    save_path = check_spectralnorm_regurarization_and_add_path(save_path, cfg.model.spectral_norm, cfg.model.reg_metric, cfg.model.reg_cer)
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
     
