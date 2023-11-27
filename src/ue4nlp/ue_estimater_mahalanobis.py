@@ -11,12 +11,10 @@ class UeEstimatorMahalanobis:
         
     def __call__(self, dataloader):
         if self.reg_or_class == 'reg':
-            X_features, scores = self._extract_features_and_predlabels(dataloader)
-            y = np.round(scores * self.upper_score).astype('int32')
+            X_features, _ = self._extract_features_and_predlabels(dataloader)
         else: 
-            X_features, scores = self._extract_features_and_predlabels(dataloader)
-            y = scores.astype('int32')
-        return self._predict_with_fitted_cov(X_features, y)
+            X_features, _ = self._extract_features_and_predlabels(dataloader)
+        return self._predict_with_fitted_cov(X_features)
     
     def fit_ue(self):
         if self.reg_or_class == 'reg':
@@ -45,7 +43,7 @@ class UeEstimatorMahalanobis:
         X_features, predlabels = extract_clsvec_truelabels(model, data_loader, self.reg_or_class, self.upper_score)
         return X_features, predlabels
     
-    def _predict_with_fitted_cov(self, X_features, y):
+    def _predict_with_fitted_cov(self, X_features):
         eval_results = {}
         md = mahalanobis_distance(None, 
                                   None, 
