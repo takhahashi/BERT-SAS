@@ -1,5 +1,8 @@
 model:
   model_type: 'reg'
+  spectral_norm: False
+  regularization_metric: False
+  regularization_cer: False
 ue:
   binary_risk: True
 sas:

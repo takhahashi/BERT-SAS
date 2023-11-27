@@ -3,6 +3,9 @@ ue:
   binary_risk: True
 model:
   model_type: 'class'
+  spectral_norm: False
+  regularization_metric: False
+  regularization_cer: False
 rcc:
   metric_type: scaledrmse
 sas:
