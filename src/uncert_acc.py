@@ -17,6 +17,7 @@ def main(cfg: DictConfig):
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
     five_fold_model_outputs = load_five_fold_results(cfg.sas.prompt_id, cfg.sas.question_id, cfg.sas.score_id, model_type, cfg.model.spectral_norm, cfg.model.regularization_metric, cfg.model.regularization_cer)
     five_fold_trues, five_fold_preds, five_fold_uncert = extract_true_pred_uncert(five_fold_model_outputs, model_type, uncert_type, upper_score)
+    print(five_fold_uncert[0][0])
 
     five_fold_rpp, five_fold_roc, five_fold_rcc, five_fold_rcc_y = [], [], [], []
     for idx, (true, pred, uncert) in enumerate(zip(five_fold_trues, five_fold_preds, five_fold_uncert)):
