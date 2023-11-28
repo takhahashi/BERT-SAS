@@ -15,7 +15,7 @@ import json
 def main(cfg: DictConfig):
     cwd = hydra.utils.get_original_cwd()
     if cfg.model.spectral_norm == True:
-        save_path = cfg.path.save_path + '_sepctralnorm'
+        save_path = cfg.path.save_path + '_spectralnorm'
         print('SpectralNorm is applyed!')
         if cfg.training.regularization_metric == True:
             save_path = save_path + '_loss_reg_metric'

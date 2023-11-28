@@ -28,8 +28,8 @@ import json
 def main(cfg: DictConfig):
 
     if cfg.model.spectral_norm == True:
-        model_save_path = cfg.path.model_save_path + '_sepctralnorm'
-        results_save_path = cfg.path.results_save_path + '_sepctralnorm'
+        model_save_path = cfg.path.model_save_path + '_spectralnorm'
+        results_save_path = cfg.path.results_save_path + '_spectralnorm'
         print('SpectralNorm is applyed!')
     else:
         model_save_path = cfg.path.model_save_path
