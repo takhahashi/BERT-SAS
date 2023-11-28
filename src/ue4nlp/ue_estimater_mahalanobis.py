@@ -25,10 +25,13 @@ class UeEstimatorMahalanobis:
             
         self.class_cond_centroids = self._fit_centroids(X_features, y.astype('int32'))
         self.class_cond_covariance = self._fit_covariance(X_features, y.astype('int32'))
-        print('centroids')
+        print('hidden_state:', X_features.shape())
+        print(X_features)
+        print('------------------')
+        print('centroids:', self.class_cond_centroids.shape())
         print(self.class_cond_centroids)
         print('------------------')
-        print('cov')
+        print('cov:', self.class_cond_covariance.shape())
         print(self.class_cond_covariance)
         
     def _fit_covariance(self, X, y):
