@@ -96,7 +96,7 @@ def main(cfg: DictConfig):
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
 
-    
+    """
     maha_estimater = UeEstimatorMahalanobis(model,
                                              train_dataloader,
                                              upper_score,
@@ -105,7 +105,7 @@ def main(cfg: DictConfig):
     maha_results = maha_estimater(test_dataloader)
     eval_results.update(maha_results)
 
-    """
+
     mcdp_estimater = UeEstimatorDp(model,
                                    cfg.ue.num_dropout,
                                    cfg.model.reg_or_class,
