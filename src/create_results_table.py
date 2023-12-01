@@ -11,13 +11,10 @@ from utils.dataset import upper_score_dic
 def main(cfg: DictConfig):
     #unames = ['reg_default', 'mul_reg_default', 'class_default', 'mul_class_default', 'mix_default', 'mul_mix_default','gp_default', 'class_trust']#, 'class_mahalanobis_spectralnorm_loss_reg_metric', 'class_trust_spectralnorm_loss_reg_metric']
     unames = ['class_default', 'class_trust', 'gp_default', 'reg_default', 'mix_default']
-    #print(unames)
-    #unames = ['simplevar', 'reg_mul', 'MP', 'class_mul_MP', 'mix', 'mix_mul', 'class_trust_score', 'gp']
     for uncert_metric in ['rcc', 'rpp', 'roc']:
         table = result_table(unames, uncert_metric, cfg.sas.question_id)
     #model_names = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix', 'gp']#, 'class_spectralnorm_loss_reg_metric']
-    #model_names = ['simple_reg_acc', 'ense_reg_acc', 'simple_class_acc', 'ense_class_acc', 'mix_acc', 'ense_mix_acc', 'gp_acc']
-    model_names = ['simple_class_acc','gp_acc','simple_reg_acc','mix_acc']
+    model_names = ['class','gp','reg','mix']
     for score_acc_metric in ['qwk', 'corr', 'rmse']:
         table = result_table(model_names, score_acc_metric, cfg.sas.question_id)
 
