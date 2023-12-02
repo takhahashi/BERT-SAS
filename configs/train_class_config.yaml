@@ -9,7 +9,7 @@ training:
   regularization_metric: False
   regularization_cer: False
 model:
-  model_name_or_path: 'bert-base-uncased'
+  model_name_or_path: 'cl-tohoku/bert-base-japanese'
   reg_or_class: 'class'
   max_length: 512
   id: 0

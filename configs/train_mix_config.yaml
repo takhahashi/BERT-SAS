@@ -7,7 +7,7 @@ training:
   collate_fn: True
   patience: 3
 model:
-  model_name_or_path: 'bert-base-uncased'
+  model_name_or_path: 'cl-tohoku/bert-base-japanese'
   reg_or_class: 'reg'
   max_length: 512
   id: 0
