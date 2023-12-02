@@ -4,7 +4,7 @@ eval:
   collate_fn: True
 model:
   inftype: None
-  model_name_or_path: 'bert-base-uncased'
+  model_name_or_path: 'cl-tohoku/bert-base-japanese'
   reg_or_class: 'mix'
   max_length: 512
   num_labels: None
