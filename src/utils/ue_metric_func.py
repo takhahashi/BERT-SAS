@@ -69,6 +69,12 @@ def calc_rcc_auc_scaledrmse(pred, true, conf, upper_score, reg_or_class):
     pred_org = np.round(pred * upper_score).astype('int32')
     true_org = np.round(true * upper_score).astype('int32')
   elif reg_or_class == 'class':
+<<<<<<< Updated upstream
+=======
+    pred_org = pred.astype('int32')
+    true_org = true.astype('int32')
+  elif reg_or_class == 'gp':
+>>>>>>> Stashed changes
     pred_org = pred.astype('int32')
     true_org = true.astype('int32')
   elif reg_or_class == 'gp':
