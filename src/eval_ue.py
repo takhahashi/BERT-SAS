@@ -345,10 +345,24 @@ def main(cfg: DictConfig):
             fold_results = json.load(f)
         five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
 
+<<<<<<< Updated upstream
     save_dir_path = cfg.path.save_dir_path
 
     fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
     ##GP###
+=======
+
+    five_fold_results = []
+    for fold in range(5):
+        with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/GP_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
+            fold_results = json.load(f)
+        five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
+
+    save_dir_path = cfg.path.save_dir_path
+
+    fresults_rcc, fresults_rpp, fresults_roc, fresults_rcc_y = [], [], [], []
+    ##GP####
+>>>>>>> Stashed changes
     for foldr in five_fold_results:
         true = foldr['labels']
         pred = foldr['score']
@@ -370,6 +384,8 @@ def main(cfg: DictConfig):
     with open(save_path, mode="wt", encoding="utf-8") as f:
         json.dump(results_dic, f, ensure_ascii=False)
     
+
+
     five_fold_results = []
     for fold in range(5):
         with open('/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/Y15/{}_results/Mix_{}/fold{}'.format(cfg.sas.question_id, cfg.sas.score_id, fold)) as f:
