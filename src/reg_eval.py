@@ -129,7 +129,7 @@ def main(cfg: DictConfig):
                                             )
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
-
+    """
     #####calib ense var ##########
     dev_ense_results = ensemble_estimater(dev_dataloader)
     calib_ense_var_estimater = UeEstimatorCalibvar(dev_labels=torch.tensor(dev_results['labels']),
@@ -139,6 +139,7 @@ def main(cfg: DictConfig):
     calib_ense_var_estimater.fit_ue()
     calib_ense_var = calib_ense_var_estimater(logvar = torch.tensor(ensemble_results['ense_var']).log())
     eval_results.update({'calib_ense_var': calib_ense_var})
+    """
 
     
 
