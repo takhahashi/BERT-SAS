@@ -96,7 +96,7 @@ def main(cfg: DictConfig):
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
 
-
+    """
     maha_estimater = UeEstimatorMahalanobis(model,
                                              train_dataloader,
                                              upper_score,
@@ -105,7 +105,7 @@ def main(cfg: DictConfig):
     maha_results = maha_estimater(test_dataloader)
     eval_results.update(maha_results)
 
-    """
+
     mcdp_estimater = UeEstimatorDp(model,
                                    cfg.ue.num_dropout,
                                    cfg.model.reg_or_class,
@@ -113,7 +113,7 @@ def main(cfg: DictConfig):
     mcdp_results = mcdp_estimater(test_dataloader)
 
     eval_results.update(mcdp_results)
-
+    """
 
 
     ensemble_estimater = UeEstimatorEnsemble(model, 
@@ -123,7 +123,7 @@ def main(cfg: DictConfig):
                                              )
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
-    """
+
     list_results = {}
     for k, v in eval_results.items():
         if type(v) == type(np.array([1, 2.])):
