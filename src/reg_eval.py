@@ -121,7 +121,7 @@ def main(cfg: DictConfig):
     eval_results.update({'calib_mcdp_var': calib_mcdp_var})
 
 
-
+    """
     ensemble_estimater = UeEstimatorEnsemble(model,
                                             cfg.ue.ensemble_model_paths,
                                             cfg.model.reg_or_class,
@@ -139,7 +139,7 @@ def main(cfg: DictConfig):
     calib_ense_var_estimater.fit_ue()
     calib_ense_var = calib_ense_var_estimater(logvar = torch.tensor(ensemble_results['ense_var']).log())
     eval_results.update({'calib_ense_var': calib_ense_var})
-    """
+
     
 
 
