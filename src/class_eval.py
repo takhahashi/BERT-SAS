@@ -111,8 +111,9 @@ def main(cfg: DictConfig):
                                    cfg.model.reg_or_class,
                                    )
     mcdp_results = mcdp_estimater(test_dataloader)
-    eval_results.update(mcdp_results)
 
+    eval_results.update(mcdp_results)
+    """
 
 
     ensemble_estimater = UeEstimatorEnsemble(model, 
@@ -122,7 +123,7 @@ def main(cfg: DictConfig):
                                              )
     ensemble_results = ensemble_estimater(test_dataloader)
     eval_results.update(ensemble_results)
-    """
+
     list_results = {}
     for k, v in eval_results.items():
         if type(v) == type(np.array([1, 2.])):
