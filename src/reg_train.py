@@ -57,7 +57,8 @@ def main(cfg: DictConfig):
 
     model.train()
     model = model.cuda()
-    earlystopping = EarlyStopping(patience=cfg.training.patience, verbose=True, path=cfg.path.save_path)
+
+    #earlystopping = EarlyStopping(patience=cfg.training.patience, verbose=True, path=cfg.path.save_path)
 
     scaler = torch.cuda.amp.GradScaler()
     sigma_scaler = Scaler(init_S=1.0).cuda()
@@ -107,9 +108,10 @@ def main(cfg: DictConfig):
             dev_loss_all += regvarloss(y_true=dev_labels, y_pre_ave=dev_mu, y_pre_var=sigma_scaler(dev_std.cuda()).pow(2).log()).to('cpu').detach().numpy().copy()
 
         print(f'Epoch:{epoch}, train_loss:{train_loss_all/num_train_batch}, dev_loss:{dev_loss_all/num_dev_batch}')
-        earlystopping(dev_loss_all, model)
-        if earlystopping.early_stop == True:
-            break
+        #earlystopping(dev_loss_all, model)
+        #if earlystopping.early_stop == True:
+        #    break
+    torch.save(model.state_dict(), cfg.path.save_path)
 
 if __name__ == "__main__":
     main()
