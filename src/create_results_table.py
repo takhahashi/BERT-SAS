@@ -9,12 +9,12 @@ from utils.dataset import upper_score_dic
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="results_table")
 def main(cfg: DictConfig):
-    #unames = ['reg_default', 'mul_reg_default', 'class_default', 'mul_class_default', 'mix_default', 'mul_mix_default','gp_default', 'class_trust']#, 'class_mahalanobis_spectralnorm_loss_reg_metric', 'class_trust_spectralnorm_loss_reg_metric']
-    unames = ['class_default', 'class_trust', 'gp_default', 'reg_default', 'mix_default', 'class_mahalanobis_spectralnorm_loss_reg_metric']
+    unames = ['reg_default', 'mul_reg_default', 'class_default', 'mul_class_default', 'mix_default', 'mul_mix_default','gp_default', 'class_trust']#, 'class_mahalanobis_spectralnorm_loss_reg_metric', 'class_trust_spectralnorm_loss_reg_metric']
+    #unames = ['class_default', 'class_trust', 'gp_default', 'reg_default', 'mix_default', 'class_mahalanobis_spectralnorm_loss_reg_metric']
     for uncert_metric in ['rcc', 'rpp', 'roc']:
         table = result_table(unames, uncert_metric, cfg.sas.question_id)
-    #model_names = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix', 'gp']#, 'class_spectralnorm_loss_reg_metric']
-    model_names = ['class','gp','reg','mix', 'class_spectralnorm_loss_reg_metric']
+    model_names = ['reg', 'mul_reg', 'class', 'mul_class', 'mix', 'mul_mix', 'gp']#, 'class_spectralnorm_loss_reg_metric']
+    #model_names = ['class','gp','reg','mix', 'class_spectralnorm_loss_reg_metric']
     for score_acc_metric in ['qwk', 'corr', 'rmse']:
         table = result_table(model_names, score_acc_metric, cfg.sas.question_id)
 
