@@ -169,7 +169,10 @@ def simple_collate_fn(list_of_data):
   batched_tensor['input_ids'] = torch.stack(in_ids)
   batched_tensor['token_type_ids'] = torch.stack(token_type)
   batched_tensor['attention_mask'] = torch.stack(atten_mask)
-  batched_tensor['labels'] = torch.tensor(labels)
+  if len(labels[0]) != 1:
+     batched_tensor['labels'] = torch.stack(labels)
+  else:
+     batched_tensor['labels'] = torch.tensor(labels)
   return batched_tensor
 
 class EarlyStopping:
