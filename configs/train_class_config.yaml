@@ -10,7 +10,7 @@ training:
   regularization_cer: False
 model:
   model_name_or_path: 'cl-tohoku/bert-base-japanese'
-  reg_or_class: 'class'
+  reg_or_class: 'ordinal_reg'
   max_length: 512
   id: 0
   num_labels: None
@@ -23,7 +23,7 @@ sas:
 path:
   traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/train_data.json
   valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/dev_data.json
-  save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Class_${sas.score_id}/fold${training.fold}/id${model.id}
+  save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Ord_reg_${sas.score_id}/fold${training.fold}/id${model.id}
 wandb:
   project: Class_SAS_${sas.question_id}_${sas.score_id}
   project_name: fold${training.fold}_id${model.id}
