@@ -79,6 +79,8 @@ def main(cfg: DictConfig):
         train_loss_all = dev_loss_all = 0
         for idx, t_batch in enumerate(train_dataloader):
             batch = {k: v.cuda() for k, v in t_batch.items()}
+            if idx == 0 and epoch == 0:
+                print(batch['labels'])
             with torch.cuda.amp.autocast():
                 training_step_outputs = model.training_step(batch, idx)
                 if cfg.training.regularization_metric == True:
