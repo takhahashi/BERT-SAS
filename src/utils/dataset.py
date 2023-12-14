@@ -87,6 +87,16 @@ upper_score_dic = {
 def get_upper_score(q_id, s_id):
      return upper_score_dic[q_id][s_id]
 
+def create_softlabels(labels, categories, metric_loss_fnc, num_categoris=None):
+  logits = []
+  for y in labels:
+    logits.append([-metric_loss_fnc(y, k) for k in categories])
+  soft_labels = torch.tensor(logits, dtype=torch.float64).softmax(dim=1)
+  return soft_labels
+
+def squared_error(y, k):
+  return (y-k)**2
+
 def get_dataset(dataf, s_id, upper_s, inftype, tokenizer):
   text, score = [], []
   for data in dataf:
@@ -97,6 +107,10 @@ def get_dataset(dataf, s_id, upper_s, inftype, tokenizer):
     labels = torch.div(torch.tensor(score, dtype=torch.float32), upper_s)
   elif inftype == 'class':
     labels = torch.tensor(score, dtype=torch.long)
+  elif inftype == 'ordinal_reg':
+    categories = list(range(upper_s+1))
+    soft_labels = create_softlabels(score, categories, metric_loss_fnc=squared_error)
+    labels = soft_labels
   else:
     raise ValueError("{} is not a valid value for scoretype".format(inftype))
   return DataSet(encoding, labels)
