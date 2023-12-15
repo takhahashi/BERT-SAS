@@ -37,7 +37,7 @@ def load_five_fold_results(prompt_id, question_id, score_id, model_type, spectra
     elif model_type == 'ordinal_reg':
         five_fold_results = []
         for fold in range(5):
-            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Ord_reg__{}/fold{}'.format(prompt_id, question_id, score_id, fold)
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Ord_reg_{}/fold{}'.format(prompt_id, question_id, score_id, fold)
             file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
             with open(file_path) as f:
                 fold_results = json.load(f)
