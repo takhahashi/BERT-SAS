@@ -86,7 +86,7 @@ def main(cfg: DictConfig):
     max_prob = probs[torch.arange(len(probs)), torch.argmax(probs, dim=-1)]
     eval_results.update({'MP': max_prob.numpy().copy()})
 
-
+    """
     trust_estimater = UeEstimatorTrustscore(model, 
                                             train_dataloader, 
                                             upper_score,
@@ -96,7 +96,7 @@ def main(cfg: DictConfig):
     trust_results = trust_estimater(test_dataloader)
     eval_results.update(trust_results)
 
-    """
+
     maha_estimater = UeEstimatorMahalanobis(model,
                                              train_dataloader,
                                              upper_score,
