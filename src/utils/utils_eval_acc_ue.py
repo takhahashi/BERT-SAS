@@ -34,6 +34,14 @@ def load_five_fold_results(prompt_id, question_id, score_id, model_type, spectra
             with open(file_path) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
+    elif model_type == 'ordinal_reg':
+        five_fold_results = []
+        for fold in range(5):
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Ord_reg__{}/fold{}'.format(prompt_id, question_id, score_id, fold)
+            file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
+            with open(file_path) as f:
+                fold_results = json.load(f)
+            five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     else:
         raise ValueError(f'`{model_type}` is not valid')
 
@@ -65,7 +73,7 @@ def extract_true_pred_uncert(five_fold_results, model_type, uncert_type, upper_s
                 uncert = fold_result['ense_var']
             else:
                 raise ValueError(f'`{uncert_type}` is not valid')
-        elif model_type == 'class':
+        elif model_type == 'class' or model_type == 'ordinal_reg':
             pred = np.argmax(fold_result['logits'], axis=-1).astype('int32')
             true = fold_result['labels'].astype('int32')
             if uncert_type == 'default':
