@@ -22,8 +22,8 @@ import wandb
 
 @hydra.main(config_path="/content/drive/MyDrive/GoogleColab/SA/ShortAnswer/BERT-SAS/configs", config_name="train_mix_config")
 def main(cfg: DictConfig):
-    wandb.init(project=cfg.wandb.project,
-               name=cfg.wandb.project_name,)
+    #wandb.init(project=cfg.wandb.project,
+    #           name=cfg.wandb.project_name,)
     tokenizer = AutoTokenizer.from_pretrained(cfg.model.model_name_or_path)
     upper_score = get_upper_score(cfg.sas.question_id, cfg.sas.score_id)
 
@@ -77,7 +77,7 @@ def main(cfg: DictConfig):
                 #mseloss_el = mseloss(outputs['score'].squeeze(), data['labels'])
                 #loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
                 loss, mse_loss, cross_loss = mix_loss(data['labels'].squeeze(), outputs['score'].squeeze(), outputs['logits'], high=upper_score, low=0, alpha=1.)
-            wandb.log({"epoch":epoch+0.001, "all_loss":loss, "mse_loss":mse_loss, "cross_loss":cross_loss})
+            #wandb.log({"epoch":epoch+0.001, "all_loss":loss, "mse_loss":mse_loss, "cross_loss":cross_loss})
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
@@ -100,11 +100,11 @@ def main(cfg: DictConfig):
             devlossall += loss.to('cpu').detach().numpy().copy()
         #devloss_list = np.append(devloss_list, devlossall/num_dev_batch)
         #weight_d.update(lossall/num_train_batch, cross_loss/num_train_batch, mse_loss/num_train_batch)
-        wandb.log({"dev_loss":loss})
+        #wandb.log({"dev_loss":loss})
         print(f'Epoch:{epoch}, train_Loss:{lossall/num_train_batch:.4f}, dev_loss:{devlossall/num_dev_batch:.4f}')
         earlystopping(devlossall/num_dev_batch, model)
         if(earlystopping.early_stop == True): break
-    wandb.finish()
+    #wandb.finish()
 
 
 if __name__ == "__main__":
