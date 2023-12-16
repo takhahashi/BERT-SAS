@@ -73,8 +73,8 @@ def main(cfg: DictConfig):
             int_score = torch.round(data['labels'] * upper_score).to(torch.int32).type(torch.LongTensor).cuda()
             with torch.cuda.amp.autocast():
                 outputs = model(data)
-                crossentropy_el = crossentropy(outputs['logits'], int_score)
-                mseloss_el = mseloss(outputs['score'].squeeze(), data['labels'])
+                #crossentropy_el = crossentropy(outputs['logits'], int_score)
+                #mseloss_el = mseloss(outputs['score'].squeeze(), data['labels'])
                 #loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
                 loss, mse_loss, cross_loss = mix_loss(data['labels'].squeeze(), outputs['score'].squeeze(), outputs['logits'], high=upper_score, low=0, alpha=1.)
             wandb.log({"epoch":epoch+0.001, "all_loss":loss, "mse_loss":mse_loss, "cross_loss":cross_loss})
@@ -93,8 +93,8 @@ def main(cfg: DictConfig):
             d_data = {k: v.cuda() for k, v in dev_data.items()}
             int_score = torch.round(d_data['labels'] * upper_score).to(torch.int32).type(torch.LongTensor).to('cpu')
             dev_outputs = {k: v.to('cpu').detach() for k, v in model(d_data).items()}
-            crossentropy_el = crossentropy(dev_outputs['logits'], int_score)
-            mseloss_el = mseloss(dev_outputs['score'].squeeze(), d_data['labels'].to('cpu').detach())
+            #crossentropy_el = crossentropy(dev_outputs['logits'], int_score)
+            #mseloss_el = mseloss(dev_outputs['score'].squeeze(), d_data['labels'].to('cpu').detach())
             #loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
             loss, mse_loss, cross_loss = mix_loss(d_data['labels'].to('cpu').detach().squeeze(), dev_outputs['score'].squeeze(), dev_outputs['logits'], high=upper_score, low=0, alpha=1.)
             devlossall += loss.to('cpu').detach().numpy().copy()
