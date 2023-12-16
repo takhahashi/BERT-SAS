@@ -13,7 +13,7 @@ from utils.utils_data import TrainDataModule
 from utils.cfunctions import simple_collate_fn, EarlyStopping, ScaleDiffBalance
 from utils.utils_models import create_module
 from models.functions import return_predresults
-from utils.cfunctions import regvarloss
+from utils.cfunctions import regvarloss, mix_loss
 from models.models import Scaler, Bert, Reg_class_mixmodel
 
 from utils.dataset import get_upper_score, get_dataset
@@ -57,7 +57,7 @@ def main(cfg: DictConfig):
     model.train()
     crossentropy = nn.CrossEntropyLoss()
     mseloss = nn.MSELoss()
-    weight_d = ScaleDiffBalance(num_tasks=2, beta=1.)
+    #weight_d = ScaleDiffBalance(num_tasks=2, beta=1.)
 
     trainloss_list, devloss_list = [], []
     scaler = torch.cuda.amp.GradScaler()
@@ -72,7 +72,8 @@ def main(cfg: DictConfig):
                 outputs = model(data)
                 crossentropy_el = crossentropy(outputs['logits'], int_score)
                 mseloss_el = mseloss(outputs['score'].squeeze(), data['labels'])
-                loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
+                #loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
+                loss, mse_loss, cross_loss = mix_loss(data['labels'].squeeze(), outputs['score'].squeeze(), outputs['logits'], high=upper_score, low=0, alpha=1.)
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
@@ -90,10 +91,11 @@ def main(cfg: DictConfig):
             dev_outputs = {k: v.to('cpu').detach() for k, v in model(d_data).items()}
             crossentropy_el = crossentropy(dev_outputs['logits'], int_score)
             mseloss_el = mseloss(dev_outputs['score'].squeeze(), d_data['labels'].to('cpu').detach())
-            loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
+            #loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
+            loss, mse_loss, cross_loss = mix_loss(d_data['labels'].to('cpu').detach().squeeze(), dev_outputs['score'].squeeze(), dev_outputs['logits'], high=upper_score, low=0, alpha=1.)
             devlossall += loss.to('cpu').detach().numpy().copy()
         #devloss_list = np.append(devloss_list, devlossall/num_dev_batch)
-        weight_d.update(lossall/num_train_batch, cross_loss/num_train_batch, mse_loss/num_train_batch)
+        #weight_d.update(lossall/num_train_batch, cross_loss/num_train_batch, mse_loss/num_train_batch)
         print(f'Epoch:{epoch}, train_Loss:{lossall/num_train_batch:.4f}, dev_loss:{devlossall/num_dev_batch:.4f}')
         earlystopping(devlossall/num_dev_batch, model)
         if(earlystopping.early_stop == True): break
