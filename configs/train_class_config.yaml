@@ -25,5 +25,5 @@ path:
   valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/dev_data.json
   save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Ord_reg_${sas.score_id}/fold${training.fold}/id${model.id}
 wandb:
-  project: Mix_SAS_${sas.question_id}_${sas.score_id}
+  project: Class_SAS_${sas.question_id}_${sas.score_id}
   project_name: fold${training.fold}_id${model.id}
