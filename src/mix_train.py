@@ -83,8 +83,8 @@ def main(cfg: DictConfig):
             scaler.update()
             model.zero_grad()
             lossall += loss.to('cpu').detach().numpy().copy()
-            cross_loss += crossentropy_el.to('cpu').detach().numpy().copy()
-            mse_loss += mseloss_el.to('cpu').detach().numpy().copy()
+            #cross_loss += crossentropy_el.to('cpu').detach().numpy().copy()
+            #mse_loss += mseloss_el.to('cpu').detach().numpy().copy()
 
         #trainloss_list = np.append(trainloss_list, lossall/num_train_batch)
         # dev QWKの計算
