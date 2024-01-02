@@ -13,7 +13,7 @@ from utils.utils_data import TrainDataModule
 from utils.cfunctions import simple_collate_fn, EarlyStopping, ScaleDiffBalance
 from utils.utils_models import create_module
 from models.functions import return_predresults
-from utils.cfunctions import regvarloss, mix_loss
+from utils.cfunctions import regvarloss, mix_loss1
 from models.models import Scaler, Bert, Reg_class_mixmodel
 
 from utils.dataset import get_upper_score, get_dataset
@@ -76,7 +76,7 @@ def main(cfg: DictConfig):
                 #crossentropy_el = crossentropy(outputs['logits'], int_score)
                 #mseloss_el = mseloss(outputs['score'].squeeze(), data['labels'])
                 #loss, s_wei, diff_wei, alpha, pre_loss = weight_d(crossentropy_el, mseloss_el)
-                loss, mse_loss, cross_loss = mix_loss(data['labels'].squeeze(), outputs['score'].squeeze(), outputs['logits'], high=upper_score, low=0, alpha=2.)
+                loss, mse_loss, cross_loss = mix_loss1(data['labels'].squeeze(), outputs['score'].squeeze(), outputs['logits'], high=upper_score, low=0, alpha=2.)
             wandb.log({"epoch":epoch+0.001, "all_loss":loss, "mse_loss":mse_loss, "cross_loss":cross_loss})
             scaler.scale(loss).backward()
             scaler.step(optimizer)

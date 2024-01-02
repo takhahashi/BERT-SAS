@@ -154,11 +154,22 @@ def regvarloss(y_true, y_pre_ave, y_pre_var):
     loss = torch.sum(loss)
     return loss
 
-def mix_loss(y_trues, y_preds, logits, high, low, alpha):
+def mix_loss1(y_trues, y_preds, logits, high, low, alpha): #  \frac{\|\hat{y}-y\|^2}{-\log{\hat{P}_{y}}}-\log{\hat{P}_{y}}
    mse_loss, cross_loss = 0, 0
    y_trues_org = np.round(torch.flatten(y_trues).to('cpu').detach().numpy().copy() * (high - low))
    probs = logits.softmax(dim=1)[list(range(len(y_trues_org))), y_trues_org]
-   loss = alpha*(1 - (torch.flatten(y_trues) - torch.flatten(y_preds)) ** 2)*(-torch.log(probs))
+   neg_ln_probs = -torch.log(probs)
+   loss = (((torch.flatten(y_trues) - torch.flatten(y_preds)) ** 2)/neg_ln_probs) + neg_ln_probs
+   mse_loss = torch.sum((torch.flatten(y_trues) - torch.flatten(y_preds)) ** 2)
+   cross_loss = torch.sum(-torch.log(probs))
+   loss = torch.sum(loss)
+   return loss, mse_loss, cross_loss
+
+def mix_loss2(y_trues, y_preds, logits, high, low, alpha): #  -\hat{P}_{y} + \hat{P}_{y}\|\hat{y}-y\|^2
+   mse_loss, cross_loss = 0, 0
+   y_trues_org = np.round(torch.flatten(y_trues).to('cpu').detach().numpy().copy() * (high - low))
+   probs = logits.softmax(dim=1)[list(range(len(y_trues_org))), y_trues_org]
+   loss = -probs + probs * ((torch.flatten(y_trues) - torch.flatten(y_preds)) ** 2)
    mse_loss = torch.sum((torch.flatten(y_trues) - torch.flatten(y_preds)) ** 2)
    cross_loss = torch.sum(-torch.log(probs))
    loss = torch.sum(loss)
