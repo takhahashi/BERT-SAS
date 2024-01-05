@@ -26,6 +26,14 @@ def load_five_fold_results(prompt_id, question_id, score_id, model_type, spectra
             with open(file_path) as f:
                 fold_results = json.load(f)
             five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
+    elif model_type == 'mix_org_loss' or model_type == 'mul_mix_org_loss':
+        five_fold_results = []
+        for fold in range(5):
+            file_path = '/content/drive/MyDrive/GoogleColab//SA/ShortAnswer/{}/{}_results/Mix_{}/fold{}_org_loss'.format(prompt_id, question_id, score_id, fold)
+            file_path = check_spectralnorm_regurarization_and_add_path(file_path, spectral_norm, reg_metric, reg_cer)
+            with open(file_path) as f:
+                fold_results = json.load(f)
+            five_fold_results.append({k: np.array(v) for k, v in fold_results.items()})
     elif model_type == 'gp':
         five_fold_results = []
         for fold in range(5):
