@@ -14,7 +14,7 @@ def main(cfg: DictConfig):
     unames = ['reg_default', 'class_default', 'mix_default', 'mix_org_loss_default', 'class_trust', 'gp_default']#, 'class_mahalanobis_spectralnorm_loss_reg_metric', 'class_trust_spectralnorm_loss_reg_metric']
     for uncert_metric in ['rcc', 'rpp', 'roc']:
         table = result_table(unames, uncert_metric, cfg.sas.question_id)
-    model_names = ['reg', 'class', 'mix', 'ordinal_reg', 'gp']#, 'class_spectralnorm_loss_reg_metric']
+    model_names = ['reg', 'class', 'mix', 'mix_org_loss', 'gp']#, 'class_spectralnorm_loss_reg_metric']
     #model_names = ['class','gp','reg','mix', 'class_spectralnorm_loss_reg_metric']
     for score_acc_metric in ['qwk', 'corr', 'rmse']:
         table = result_table(model_names, score_acc_metric, cfg.sas.question_id)
