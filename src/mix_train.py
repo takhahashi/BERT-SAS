@@ -89,6 +89,9 @@ def main(cfg: DictConfig):
             #cross_loss += crossentropy_el.to('cpu').detach().numpy().copy()
             #mse_loss += mseloss_el.to('cpu').detach().numpy().copy()
 
+            break
+        break
+
         #trainloss_list = np.append(trainloss_list, lossall/num_train_batch)
         # dev QWKの計算
         model.eval()
