@@ -192,7 +192,7 @@ def mix_loss3(y_trues, y_preds, logits, high, low): #  -\hat{P}_{y} + \hat{P}_{y
 
    print(f'y_true:{y_trues_org}, y_pred:{y_preds_org}, probs:{logits.softmax(dim=1)}')
    print(f'correct_probs:{correct_probs}, wrong_probs:{wrong_probs}')
-   print(f'corr_ln_probs:{correct_ln_probs}, wro_ln_probs:{wrong_ln_probs}, mean_wro_ln_probs:{torch.mean(-torch.log(wrong_probs), dim=-1)}')
+   print(f'corr_ln_probs:{correct_ln_probs}, wro_ln_probs:{-torch.log(wrong_probs)}, mean_wro_ln_probs:{wrong_ln_probs}')
    return mse_loss, cross_loss, normal_cross_loss
 
 def simple_collate_fn(list_of_data):
