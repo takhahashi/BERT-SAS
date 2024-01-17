@@ -175,6 +175,26 @@ def mix_loss2(y_trues, y_preds, logits, high, low, alpha): #  -\hat{P}_{y} + \ha
    loss = torch.sum(loss)
    return loss, mse_loss, cross_loss
 
+def mix_loss3(y_trues, y_preds, logits, high, low): #  -\hat{P}_{y} + \hat{P}_{y}\|\hat{y}-y\|^2
+   mse_loss, cross_loss = 0, 0
+   y_trues_org = np.round(torch.flatten(y_trues).to('cpu').detach().numpy().copy() * (high - low))
+   y_preds_org = np.round(torch.flatten(y_preds).to('cpu').detach().numpy().copy() * (high - low))
+   correct_probs = logits.softmax(dim=1)[y_trues_org == y_preds_org, y_trues_org[y_trues_org == y_preds_org]]
+   wrong_probs = logits.softmax(dim=1)[y_trues_org != y_preds_org]
+
+   correct_ln_probs = -torch.log(correct_probs)
+   wrong_ln_probs = torch.mean(-torch.log(wrong_probs), dim=-1)
+   ln_probs = torch.concat([correct_ln_probs, wrong_ln_probs])
+
+   mse_loss = torch.mean((torch.flatten(y_trues) - torch.flatten(y_preds)) ** 2)
+   cross_loss = torch.mean(ln_probs)
+   normal_cross_loss = torch.mean(correct_ln_probs)
+
+   #print(f'y_true:{y_trues_org}, y_pred:{y_preds_org}, probs:{logits.softmax(dim=1)}')
+   #print(f'correct_probs:{correct_probs}, wrong_probs:{wrong_probs}')
+   #print(f'corr_ln_probs:{correct_ln_probs}, wro_ln_probs:{wrong_ln_probs}, cat_ln_probs:{ln_probs}')
+   return mse_loss, cross_loss, normal_cross_loss
+
 def simple_collate_fn(list_of_data):
   pad_max_len = torch.tensor(0)
   for data in list_of_data:
