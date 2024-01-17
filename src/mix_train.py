@@ -113,7 +113,7 @@ def main(cfg: DictConfig):
                    "mse_scale_weights":s_wei[1],
                    "cross_scale_weights":s_wei[0],
                    "mse_diff_weights":diff_wei[1],
-                   "cross_scale_weights":diff_wei[0]})
+                   "cross_diff_weights":diff_wei[0]})
         print(f'Epoch:{epoch}, train_Loss:{lossall/num_train_batch:.4f}, dev_loss:{devlossall/num_dev_batch:.4f}')
         earlystopping(devlossall/num_dev_batch, model)
         if(earlystopping.early_stop == True): break
