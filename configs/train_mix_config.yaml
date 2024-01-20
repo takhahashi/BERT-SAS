@@ -7,7 +7,7 @@ training:
   collate_fn: True
   patience: 3
 model:
-  model_name_or_path: 'cl-tohoku/bert-base-japanese'
+  model_name_or_path: 'ku-nlp/deberta-v2-base-japanese' #'cl-tohoku/bert-base-japanese'
   reg_or_class: 'reg'
   max_length: 512
   id: 0
@@ -20,7 +20,7 @@ sas:
 path:
   traindata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/train_data.json
   valdata_file_name: /content/drive/MyDrive/GoogleColab/SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_data/${sas.prompt_id}_${sas.question_id}_fold${training.fold}/dev_data.json
-  save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/id${model.id}_org_loss
+  save_path: /content/drive/MyDrive/GoogleColab//SA/ShortAnswer/${sas.prompt_id}/${sas.question_id}_model/Mix_${sas.score_id}/fold${training.fold}/id${model.id}_deberta_org_loss
 wandb:
   project: Mix_SAS_${sas.question_id}_${sas.score_id}
   project_name: fold${training.fold}_id${model.id}
